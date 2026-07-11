@@ -39,9 +39,57 @@ button.lit{background:#33271a;border-color:var(--amber);color:var(--amber);
   box-shadow:0 0 10px rgba(255,176,0,.25), inset 0 -2px 0 rgba(255,176,0,.6);}
 select,input[type=file]{font-family:inherit;font-size:.75rem;color:var(--ink);
   background:var(--cell);border:1px solid var(--line);border-radius:4px;padding:5px 6px;}
-input[type=range]{accent-color:var(--amber);}
+/* ---------- touch-friendly sliders / knobs ---------- */
+input[type=range]{
+  --thumb:var(--amber);
+  --track:#101114;
+  --track-border:var(--line2);
+  -webkit-appearance:none;appearance:none;
+  background:transparent;border:none;outline:none;
+  width:100%;height:40px;margin:0;padding:0;
+  cursor:pointer;touch-action:none;
+  accent-color:var(--thumb);
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:10px;border-radius:5px;
+  background:linear-gradient(180deg,#1a1c22 0%,var(--track) 100%);
+  border:1px solid var(--track-border);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.65);
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:28px;height:28px;margin-top:-10px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff3c8 0%,var(--thumb) 42%,#5a3a00 100%);
+  border:2px solid #1a1408;
+  box-shadow:0 1px 4px rgba(0,0,0,.55),0 0 0 1px rgba(255,176,0,.25);
+  cursor:grab;
+}
+input[type=range]:active::-webkit-slider-thumb{cursor:grabbing;transform:scale(1.08);}
+input[type=range]::-moz-range-track{
+  height:10px;border-radius:5px;
+  background:linear-gradient(180deg,#1a1c22 0%,var(--track) 100%);
+  border:1px solid var(--track-border);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.65);
+}
+input[type=range]::-moz-range-thumb{
+  width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff3c8 0%,var(--thumb) 42%,#5a3a00 100%);
+  border:2px solid #1a1408;
+  box-shadow:0 1px 4px rgba(0,0,0,.55),0 0 0 1px rgba(255,176,0,.25);
+  cursor:grab;
+}
+input[type=range]:active::-moz-range-thumb{cursor:grabbing;}
+input[type=range]:focus-visible{outline:none;}
+input[type=range]:focus-visible::-webkit-slider-thumb{
+  box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--thumb),0 1px 4px rgba(0,0,0,.55);
+}
+input[type=range]:focus-visible::-moz-range-thumb{
+  box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--thumb),0 1px 4px rgba(0,0,0,.55);
+}
 label.mini{font-size:.62rem;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:3px;}
-.ctl{display:flex;flex-direction:column;gap:2px;}
+.ctl{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.ctl input[type=range]{min-width:120px;}
 /* ---------- transport ---------- */
 .transport{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap;}
 .brand{display:flex;flex-direction:column;justify-content:center;}
@@ -57,7 +105,7 @@ label.mini{font-size:.62rem;letter-spacing:.14em;color:var(--dim);text-transform
 .playbtn{width:78px;min-height:56px;font-size:.9rem;border-radius:6px;}
 .playbtn.lit{background:#0f2d22;border-color:var(--synth);color:var(--synth);
   box-shadow:0 0 14px rgba(64,214,189,.35), inset 0 -2px 0 var(--synth);}
-.bpmwrap input{width:130px;}
+.bpmwrap input[type=range]{width:160px;min-width:160px;}
 canvas#xypad{background:#101114;border:1px solid var(--line);border-radius:4px;
   cursor:crosshair;touch-action:none;display:block;}
 /* ---------- waveform ---------- */
@@ -78,7 +126,7 @@ canvas#wave{width:100%;height:110px;display:block;background:#101114;border:1px 
 .drumknob-card .ctl input{width:100%;}
 .drumknob-card .ctl{position:relative;}
 .drumknob-card .ctl.has-motion label.mini{color:var(--amber);}
-.drumknob-card .ctl.has-motion input{accent-color:var(--hot);}
+.drumknob-card .ctl.has-motion input{--thumb:var(--hot);}
 .drumknob-card .ctl .motdot{position:absolute;top:0;right:0;width:6px;height:6px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px rgba(255,61,129,.7);display:none;}
 .drumknob-card .ctl.has-motion .motdot{display:block;}
 .drumknob-card .sect{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line2);}
@@ -153,7 +201,7 @@ tr.lane-slc td.cell{color:var(--ink);background:#26282f;}
 .inst-name{font-size:.8rem;font-weight:700;letter-spacing:.14em;color:var(--synth);text-transform:uppercase;}
 .inst[data-id=acid] .inst-name{color:var(--acid);}
 .inst .ctls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-left:auto;}
-.inst .ctls input[type=range]{width:80px;}
+.inst .ctls input[type=range]{width:140px;min-width:140px;}
 table.mel td.cell{height:38px;}
 table.mel td.cell.on{background:#0e2a24;border-color:var(--synth);color:var(--synth);
   box-shadow:inset 0 -2px 0 var(--synth);font-size:.85rem;}
@@ -244,7 +292,7 @@ table.mel tr[data-inst=bass] th.lane{color:var(--synth);}
 .pstack{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line2);padding-top:6px;}
 .pstack button{font-size:.6rem;padding:4px 0;color:var(--dim);width:100%;}
 #seqhead .ctls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-left:auto;}
-#seqhead input[type=range]{width:80px;}
+#seqhead input[type=range]{width:140px;min-width:140px;}
 table.mel[data-inst=acid] td.cell.on{background:#25300e;border-color:var(--acid);color:var(--acid);box-shadow:inset 0 -2px 0 var(--acid);}
 .footer{margin-top:14px;font-size:.62rem;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
 /* ---------- LAN session / views ---------- */
@@ -288,23 +336,68 @@ body.role-ctrl #file{pointer-events:none;opacity:.4;}
 canvas#viz{display:block;width:100%;height:min(52vh,520px);background:#050608;}
 .viz-strip{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;
   padding:10px 12px 12px;border-top:1px solid var(--line2);background:var(--panel2);}
-.viz-tools{display:flex;gap:4px;flex-wrap:wrap;}
+.viz-decks{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:8px;width:100%;flex-basis:100%;}
+@media (max-width:900px){.viz-decks{grid-template-columns:1fr 1fr;}}
+.viz-deck{
+  background:var(--cell);border:1px solid var(--line2);border-radius:6px;padding:8px 9px;
+  display:flex;flex-direction:column;gap:6px;min-width:0;}
+.viz-deck.focus{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,176,0,.35);}
+.viz-deck .deck-top{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.viz-deck .deck-sel{
+  padding:10px 12px;min-height:42px;font-size:.78rem;letter-spacing:.1em;flex:1;}
+.viz-deck.focus .deck-sel{background:#33271a;border-color:var(--amber);color:var(--amber);
+  box-shadow:inset 0 -2px 0 var(--amber);}
+.viz-deck .deck-tool{
+  font-family:'VT323',monospace;font-size:1.05rem;color:var(--dim);letter-spacing:.04em;
+  text-transform:uppercase;min-height:1.2em;}
+.viz-deck.focus .deck-tool{color:var(--lcd);}
+.viz-deck .deck-int{width:100%;}
+.viz-deck-tools{display:flex;flex-direction:column;gap:4px;width:100%;flex-basis:100%;}
+.viz-layers{display:flex;flex-direction:column;gap:10px;width:100%;flex-basis:100%;}
+.viz-layers .layer-mixrow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+.viz-tools{display:flex;gap:6px;flex-wrap:wrap;}
+.viz-tools button{
+  padding:13px 16px;font-size:.82rem;min-height:48px;min-width:78px;
+  letter-spacing:.06em;}
 .viz-tools button.lit{background:#0f2d26;border-color:var(--synth);color:var(--synth);
   box-shadow:inset 0 -2px 0 var(--synth);}
+.viz-tools button.off.lit{background:#26282f;border-color:var(--dim);color:var(--dim);
+  box-shadow:inset 0 -2px 0 var(--dim);}
+.viz-panel.show-flake-mix .viz-flake{display:flex;}
 .viz-knobs{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;flex:1;}
-.viz-knobs .ctl input[type=range]{width:110px;}
-.viz-flake,.viz-tunnel,.viz-pulse,.viz-mirror{display:none;gap:10px;flex-wrap:wrap;align-items:flex-end;width:100%;}
-.viz-panel.tool-flake .viz-flake{display:flex;}
-.viz-panel.tool-tunnel .viz-tunnel{display:flex;}
-.viz-panel.tool-pulse .viz-pulse{display:flex;}
-.viz-panel.tool-mirror .viz-mirror{display:flex;}
-.viz-toolopts .ctl input[type=range]{width:110px;}
-.viz-kernels{display:flex;gap:3px;flex-wrap:wrap;}
-.viz-kernels button{padding:4px 7px;font-size:.58rem;}
+.viz-knobs .ctl{min-width:132px;}
+.viz-knobs .ctl input[type=range]{width:132px;min-width:132px;}
+#vizbeat{min-height:44px;padding:10px 16px;font-size:.78rem;}
+.viz-flake,.viz-tunnel,.viz-pulse,.viz-mirror,.viz-plasma,.viz-laser,.viz-scan,.viz-glitch,.viz-field,.viz-blob,.viz-smoke,.viz-water,.viz-aurora,.viz-dust,.viz-lattice,.viz-voronoi,.viz-stars,.viz-ribbon,.viz-hex{display:none;gap:10px;flex-wrap:wrap;align-items:flex-end;width:100%;}
+.viz-panel.show-flake .viz-flake{display:flex;}
+.viz-panel.show-tunnel .viz-tunnel{display:flex;}
+.viz-panel.show-pulse .viz-pulse{display:flex;}
+.viz-panel.show-mirror .viz-mirror{display:flex;}
+.viz-panel.show-plasma .viz-plasma{display:flex;}
+.viz-panel.show-laser .viz-laser{display:flex;}
+.viz-panel.show-scan .viz-scan{display:flex;}
+.viz-panel.show-glitch .viz-glitch{display:flex;}
+.viz-panel.show-field .viz-field{display:flex;}
+.viz-panel.show-blob .viz-blob{display:flex;}
+.viz-panel.show-smoke .viz-smoke{display:flex;}
+.viz-panel.show-water .viz-water{display:flex;}
+.viz-panel.show-aurora .viz-aurora{display:flex;}
+.viz-panel.show-dust .viz-dust{display:flex;}
+.viz-panel.show-lattice .viz-lattice{display:flex;}
+.viz-panel.show-voronoi .viz-voronoi{display:flex;}
+.viz-panel.show-stars .viz-stars{display:flex;}
+.viz-panel.show-ribbon .viz-ribbon{display:flex;}
+.viz-panel.show-hex .viz-hex{display:flex;}
+.viz-toolopts .ctl{min-width:132px;}
+.viz-toolopts .ctl input[type=range]{width:132px;min-width:132px;}
+.viz-kernels{display:flex;gap:6px;flex-wrap:wrap;}
+.viz-kernels button{padding:12px 14px;font-size:.78rem;min-height:44px;min-width:64px;letter-spacing:.06em;}
 .viz-kernels button.lit{background:#3a2317;border-color:var(--drum);color:var(--drum);
   box-shadow:inset 0 -2px 0 var(--drum);}
-.viz-pals{display:flex;gap:4px;flex-wrap:wrap;}
-.viz-pals button{width:28px;height:28px;padding:0;border-radius:4px;border:2px solid var(--line);}
+.viz-kernels#vizblends button.lit{background:#33271a;border-color:var(--amber);color:var(--amber);
+  box-shadow:inset 0 -2px 0 var(--amber);}
+.viz-pals{display:flex;gap:6px;flex-wrap:wrap;}
+.viz-pals button{width:44px;height:44px;padding:0;border-radius:4px;border:2px solid var(--line);}
 .viz-pals button.lit{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber);}
 body.viz-solo{padding:0;overflow:hidden;}
 body.viz-solo .machine{max-width:none;margin:0;border:none;border-radius:0;padding:0;
@@ -321,6 +414,18 @@ body.viz-solo .viz-stage{min-height:100vh;border:none;}
 body.viz-solo canvas#viz{height:100vh;}
 body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;
   background:rgba(20,21,24,.88);backdrop-filter:blur(8px);border-top:1px solid var(--line);}
+@media (max-width:720px){
+  input[type=range]{height:44px;}
+  input[type=range]::-webkit-slider-thumb{width:32px;height:32px;margin-top:-12px;}
+  input[type=range]::-moz-range-thumb{width:32px;height:32px;}
+  .inst .ctls input[type=range],
+  #seqhead input[type=range],
+  .viz-knobs .ctl input[type=range],
+  .viz-toolopts .ctl input[type=range],
+  .ctl input[type=range]{width:100%;min-width:0;}
+  .viz-knobs .ctl,.viz-toolopts .ctl{flex:1 1 140px;min-width:140px;}
+  .bpmwrap input{width:100%;min-width:160px;}
+}
 @media (prefers-reduced-motion:reduce){ *{transition:none!important;} }
 </style>
 </head>
@@ -396,7 +501,7 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
       <button id="regen">↻ Synth break</button>
       <label for="file" class="mini" style="margin:0">load your own break (1-bar loop works best)</label>
       <input type="file" id="file" accept="audio/*">
-      <div class="ctl" style="min-width:110px"><label class="mini">Bitcrush</label>
+      <div class="ctl" style="min-width:140px"><label class="mini">Bitcrush</label>
         <input type="range" id="crush" min="0" max="100" value="0"></div>
     </div>
 
@@ -436,7 +541,7 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
       <button class="reset" id="amenchop">Amen chop</button>
       <div class="chaos">
         <label class="mini" style="margin:0">Chaos amount</label>
-        <input type="range" id="chaosamt" min="10" max="100" value="45" style="width:110px">
+        <input type="range" id="chaosamt" min="10" max="100" value="45" style="width:140px;min-width:140px">
       </div>
     </div>
 
@@ -497,7 +602,7 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
   </div>
 
   <!-- ======== VISUALS ======== -->
-  <div class="panel viz-panel tool-tunnel" data-panel="visuals" id="vizpanel">
+  <div class="panel viz-panel show-tunnel" data-panel="visuals" id="vizpanel">
     <div class="panel-head">
       <span class="eyebrow" style="color:var(--hot)">Visuals · live reactive</span><div class="rule"></div>
       <span class="mini" style="margin:0">tools + knobs · no coding · open view=visuals for projector</span>
@@ -506,17 +611,81 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
       <canvas id="viz" width="960" height="540"></canvas>
     </div>
     <div class="viz-strip">
-      <div class="ctl">
-        <label class="mini">Tool</label>
-        <div class="viz-tools" id="viztools">
-          <button data-tool="tunnel" class="lit">Tunnel</button>
+      <div class="viz-layers">
+        <div class="viz-decks" id="vizdecks">
+        <div class="viz-deck focus" data-deck="0">
+          <div class="deck-top">
+            <button type="button" class="deck-sel lit" data-decksel="0">Deck 1</button>
+          </div>
+          <div class="deck-tool" id="vizdecktool0">Tunnel</div>
+          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint0v">70</span></label>
+            <input type="range" class="deck-int" id="vizdeckint0" data-deckint="0" min="0" max="100" value="70"></div>
+        </div>
+        <div class="viz-deck" data-deck="1">
+          <div class="deck-top">
+            <button type="button" class="deck-sel" data-decksel="1">Deck 2</button>
+          </div>
+          <div class="deck-tool" id="vizdecktool1">Off</div>
+          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint1v">0</span></label>
+            <input type="range" class="deck-int" id="vizdeckint1" data-deckint="1" min="0" max="100" value="0"></div>
+        </div>
+        <div class="viz-deck" data-deck="2">
+          <div class="deck-top">
+            <button type="button" class="deck-sel" data-decksel="2">Deck 3</button>
+          </div>
+          <div class="deck-tool" id="vizdecktool2">Off</div>
+          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint2v">0</span></label>
+            <input type="range" class="deck-int" id="vizdeckint2" data-deckint="2" min="0" max="100" value="0"></div>
+        </div>
+        <div class="viz-deck" data-deck="3">
+          <div class="deck-top">
+            <button type="button" class="deck-sel" data-decksel="3">Deck 4</button>
+          </div>
+          <div class="deck-tool" id="vizdecktool3">Off</div>
+          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint3v">0</span></label>
+            <input type="range" class="deck-int" id="vizdeckint3" data-deckint="3" min="0" max="100" value="0"></div>
+        </div>
+        </div>
+        <div class="viz-deck-tools">
+          <label class="mini" id="vizdeckeditlab">Deck 1 · tool</label>
+          <div class="viz-tools" id="vizdecktools">
+          <button data-tool="" class="off">Off</button>
+          <button data-tool="tunnel">Tunnel</button>
           <button data-tool="pulse">Pulse</button>
           <button data-tool="mirror">Mirror</button>
           <button data-tool="flake">Flake</button>
+          <button data-tool="plasma">Plasma</button>
+          <button data-tool="laser">Laser</button>
+          <button data-tool="scan">Scan</button>
+          <button data-tool="glitch">Glitch</button>
+          <button data-tool="field">Field</button>
+          <button data-tool="blob">Blob</button>
+          <button data-tool="smoke">Smoke</button>
+          <button data-tool="water">Water</button>
+          <button data-tool="aurora">Aurora</button>
+          <button data-tool="dust">Dust</button>
+          <button data-tool="lattice">Lattice</button>
+          <button data-tool="voronoi">Voronoi</button>
+          <button data-tool="stars">Stars</button>
+          <button data-tool="ribbon">Ribbon</button>
+          <button data-tool="hex">Hex</button>
+          </div>
+        </div>
+        <div class="layer-mixrow">
+          <div class="ctl">
+            <label class="mini">Deck blend</label>
+            <div class="viz-kernels" id="vizblends">
+              <button data-blend="mix" class="lit">Mix</button>
+              <button data-blend="add">Add</button>
+              <button data-blend="screen">Screen</button>
+              <button data-blend="diff">Diff</button>
+              <button data-blend="flake">Flake</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="viz-knobs">
-        <div class="ctl"><label class="mini">Intensity <span id="vizintv">70</span></label>
+        <div class="ctl"><label class="mini">Master <span id="vizintv">70</span></label>
           <input type="range" id="vizint" min="0" max="100" value="70"></div>
         <div class="ctl"><label class="mini">Hue <span id="vizhuev">0</span></label>
           <input type="range" id="vizhue" min="0" max="360" value="0"></div>
@@ -543,6 +712,9 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
             <button data-preset="drift">Drift</button>
             <button data-preset="grid">Grid</button>
             <button data-preset="strobe">Strobe</button>
+            <button data-preset="smoke">Smoke</button>
+            <button data-preset="laser">Laser</button>
+            <button data-preset="cells">Cells</button>
           </div>
         </div>
       </div>
@@ -626,6 +798,186 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
           </div>
         </div>
       </div>
+      <div class="viz-plasma viz-toolopts" id="vizplasma">
+        <div class="ctl"><label class="mini">Scale <span id="vizplasmascalev">45</span></label>
+          <input type="range" id="vizplasmascale" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Drift <span id="vizplasmadriftv">40</span></label>
+          <input type="range" id="vizplasmadrift" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Contrast <span id="vizplasmacontrastv">55</span></label>
+          <input type="range" id="vizplasmacontrast" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Layers <span id="vizplasmalayersv">50</span></label>
+          <input type="range" id="vizplasmalayers" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Flow <span id="vizplasmaflowv">50</span></label>
+          <input type="range" id="vizplasmaflow" min="0" max="100" value="50"></div>
+      </div>
+      <div class="viz-laser viz-toolopts" id="vizlaser">
+        <div class="ctl"><label class="mini">Beams <span id="vizlaserbeamsv">50</span></label>
+          <input type="range" id="vizlaserbeams" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Sweep <span id="vizlasersweepv">45</span></label>
+          <input type="range" id="vizlasersweep" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Width <span id="vizlaserwidthv">35</span></label>
+          <input type="range" id="vizlaserwidth" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Scatter <span id="vizlaserscatterv">25</span></label>
+          <input type="range" id="vizlaserscatter" min="0" max="100" value="25"></div>
+        <div class="ctl"><label class="mini">Bloom <span id="vizlaserbloomv">50</span></label>
+          <input type="range" id="vizlaserbloom" min="0" max="100" value="50"></div>
+      </div>
+      <div class="viz-scan viz-toolopts" id="vizscan">
+        <div class="ctl"><label class="mini">Bars <span id="vizscanbarsv">55</span></label>
+          <input type="range" id="vizscanbars" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Scroll <span id="vizscanscrollv">40</span></label>
+          <input type="range" id="vizscanscroll" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Thick <span id="vizscanthickv">40</span></label>
+          <input type="range" id="vizscanthick" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Gap <span id="vizscangapv">35</span></label>
+          <input type="range" id="vizscangap" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Glow <span id="vizscanglowv">50</span></label>
+          <input type="range" id="vizscanglow" min="0" max="100" value="50"></div>
+      </div>
+      <div class="viz-glitch viz-toolopts" id="vizglitch">
+        <div class="ctl"><label class="mini">Blocks <span id="vizglitchblocksv">50</span></label>
+          <input type="range" id="vizglitchblocks" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Tear <span id="vizglitchtearv">45</span></label>
+          <input type="range" id="vizglitchtear" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">RGB <span id="vizglitchrgbv">40</span></label>
+          <input type="range" id="vizglitchrgb" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Noise <span id="vizglitchnoisev">35</span></label>
+          <input type="range" id="vizglitchnoise" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Hold <span id="vizglitchholdv">30</span></label>
+          <input type="range" id="vizglitchhold" min="0" max="100" value="30"></div>
+      </div>
+      <div class="viz-field viz-toolopts" id="vizfield">
+        <div class="ctl"><label class="mini">Density <span id="vizfielddensityv">55</span></label>
+          <input type="range" id="vizfielddensity" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Twinkle <span id="vizfieldtwinklev">50</span></label>
+          <input type="range" id="vizfieldtwinkle" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Depth <span id="vizfielddepthv">50</span></label>
+          <input type="range" id="vizfielddepth" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Drift <span id="vizfielddriftv">35</span></label>
+          <input type="range" id="vizfielddrift" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Hit <span id="vizfieldhitv">55</span></label>
+          <input type="range" id="vizfieldhit" min="0" max="100" value="55"></div>
+      </div>
+      <div class="viz-blob viz-toolopts" id="vizblob">
+        <div class="ctl"><label class="mini">Count <span id="vizblobcountv">50</span></label>
+          <input type="range" id="vizblobcount" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Size <span id="vizblobsizev">45</span></label>
+          <input type="range" id="vizblobsize" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Merge <span id="vizblobmergev">55</span></label>
+          <input type="range" id="vizblobmerge" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Wobble <span id="vizblobwobblev">40</span></label>
+          <input type="range" id="vizblobwobble" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Soft <span id="vizblobsoftv">50</span></label>
+          <input type="range" id="vizblobsoft" min="0" max="100" value="50"></div>
+      </div>
+      <div class="viz-smoke viz-toolopts" id="vizsmoke">
+        <div class="ctl"><label class="mini">Density <span id="vizsmokedensityv">55</span></label>
+          <input type="range" id="vizsmokedensity" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Curl <span id="vizsmokecurlv">50</span></label>
+          <input type="range" id="vizsmokecurl" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Rise <span id="vizsmokerisev">45</span></label>
+          <input type="range" id="vizsmokerise" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Soft <span id="vizsmokesoftv">55</span></label>
+          <input type="range" id="vizsmokesoft" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Grain <span id="vizsmokegrainv">30</span></label>
+          <input type="range" id="vizsmokegrain" min="0" max="100" value="30"></div>
+      </div>
+      <div class="viz-water viz-toolopts" id="vizwater">
+        <div class="ctl"><label class="mini">Waves <span id="vizwaterwavesv">50</span></label>
+          <input type="range" id="vizwaterwaves" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Refract <span id="vizwaterrefractv">45</span></label>
+          <input type="range" id="vizwaterrefract" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Depth <span id="vizwaterdepthv">50</span></label>
+          <input type="range" id="vizwaterdepth" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Chop <span id="vizwaterchopv">35</span></label>
+          <input type="range" id="vizwaterchop" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Shine <span id="vizwatershinev">55</span></label>
+          <input type="range" id="vizwatershine" min="0" max="100" value="55"></div>
+      </div>
+      <div class="viz-aurora viz-toolopts" id="vizaurora">
+        <div class="ctl"><label class="mini">Bands <span id="vizaurorabandsv">50</span></label>
+          <input type="range" id="vizaurorabands" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Warp <span id="vizaurorawarpv">55</span></label>
+          <input type="range" id="vizaurorawarp" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Fade <span id="vizaurorafadev">40</span></label>
+          <input type="range" id="vizaurorafade" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Spark <span id="vizaurorasparkv">35</span></label>
+          <input type="range" id="vizauroraspark" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Drift <span id="vizauroradriftv">40</span></label>
+          <input type="range" id="vizauroradrift" min="0" max="100" value="40"></div>
+      </div>
+      <div class="viz-dust viz-toolopts" id="vizdust">
+        <div class="ctl"><label class="mini">Count <span id="vizdustcountv">55</span></label>
+          <input type="range" id="vizdustcount" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Size <span id="vizdustsizev">40</span></label>
+          <input type="range" id="vizdustsize" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Spark <span id="vizdustsparkv">50</span></label>
+          <input type="range" id="vizdustspark" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Drift <span id="vizdustdriftv">45</span></label>
+          <input type="range" id="vizdustdrift" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Trail <span id="vizdusttrailv">40</span></label>
+          <input type="range" id="vizdusttrail" min="0" max="100" value="40"></div>
+      </div>
+      <div class="viz-lattice viz-toolopts" id="vizlattice">
+        <div class="ctl"><label class="mini">Cells <span id="vizlatticecellsv">50</span></label>
+          <input type="range" id="vizlatticecells" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Persp <span id="vizlatticeperspv">55</span></label>
+          <input type="range" id="vizlatticepersp" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Spin <span id="vizlatticespinv">35</span></label>
+          <input type="range" id="vizlatticespin" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Thick <span id="vizlatticethickv">40</span></label>
+          <input type="range" id="vizlatticethick" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Fade <span id="vizlatticefadev">45</span></label>
+          <input type="range" id="vizlatticefade" min="0" max="100" value="45"></div>
+      </div>
+      <div class="viz-voronoi viz-toolopts" id="vizvoronoi">
+        <div class="ctl"><label class="mini">Cells <span id="vizvoronoicellsv">50</span></label>
+          <input type="range" id="vizvoronoicells" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Edge <span id="vizvoronoiedgev">55</span></label>
+          <input type="range" id="vizvoronoiedge" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Animate <span id="vizvoronoianimatev">40</span></label>
+          <input type="range" id="vizvoronoianimate" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Jitter <span id="vizvoronoijitterv">35</span></label>
+          <input type="range" id="vizvoronoijitter" min="0" max="100" value="35"></div>
+        <div class="ctl"><label class="mini">Fill <span id="vizvoronoifillv">45</span></label>
+          <input type="range" id="vizvoronoifill" min="0" max="100" value="45"></div>
+      </div>
+      <div class="viz-stars viz-toolopts" id="vizstars">
+        <div class="ctl"><label class="mini">Count <span id="vizstarscountv">55</span></label>
+          <input type="range" id="vizstarscount" min="0" max="100" value="55"></div>
+        <div class="ctl"><label class="mini">Zoom <span id="vizstarszoomv">50</span></label>
+          <input type="range" id="vizstarszoom" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Streak <span id="vizstarsstreakv">40</span></label>
+          <input type="range" id="vizstarsstreak" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Twinkle <span id="vizstarstwinklev">50</span></label>
+          <input type="range" id="vizstarstwinkle" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Fog <span id="vizstarsfogv">35</span></label>
+          <input type="range" id="vizstarsfog" min="0" max="100" value="35"></div>
+      </div>
+      <div class="viz-ribbon viz-toolopts" id="vizribbon">
+        <div class="ctl"><label class="mini">Count <span id="vizribboncountv">50</span></label>
+          <input type="range" id="vizribboncount" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Width <span id="vizribbonwidthv">40</span></label>
+          <input type="range" id="vizribbonwidth" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Twist <span id="vizribbontwistv">45</span></label>
+          <input type="range" id="vizribbontwist" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Wave <span id="vizribbonwavev">50</span></label>
+          <input type="range" id="vizribbonwave" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Glow <span id="vizribbonglowv">55</span></label>
+          <input type="range" id="vizribbonglow" min="0" max="100" value="55"></div>
+      </div>
+      <div class="viz-hex viz-toolopts" id="vizhex">
+        <div class="ctl"><label class="mini">Size <span id="vizhexsizev">45</span></label>
+          <input type="range" id="vizhexsize" min="0" max="100" value="45"></div>
+        <div class="ctl"><label class="mini">Thick <span id="vizhexthickv">40</span></label>
+          <input type="range" id="vizhexthick" min="0" max="100" value="40"></div>
+        <div class="ctl"><label class="mini">Pulse <span id="vizhexpulsev">50</span></label>
+          <input type="range" id="vizhexpulse" min="0" max="100" value="50"></div>
+        <div class="ctl"><label class="mini">Warp <span id="vizhexwarpv">30</span></label>
+          <input type="range" id="vizhexwarp" min="0" max="100" value="30"></div>
+        <div class="ctl"><label class="mini">Glow <span id="vizhexglowv">50</span></label>
+          <input type="range" id="vizhexglow" min="0" max="100" value="50"></div>
+      </div>
     </div>
   </div>
 
@@ -680,27 +1032,92 @@ function cloneVoice(v){return JSON.parse(JSON.stringify(v));}
 function clamp01(x,d){x=x!=null?+x:d; return Math.max(0,Math.min(1,Number.isFinite(x)?x:d));}
 function defaultViz(){
   return {
-    tool:'tunnel', intensity:.7, hue:0, speed:.5, trail:.35, flash:.2, beatSync:true, preset:'',
+    tool:'tunnel', blend:'mix', editDeck:0,
+    decks:[
+      {tool:'tunnel',intensity:.7},
+      {tool:'',intensity:0},
+      {tool:'',intensity:0},
+      {tool:'',intensity:0},
+    ],
+    intensity:.7, hue:0, speed:.5, trail:.35, flash:.2, beatSync:true, preset:'',
     tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},
     pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},
     mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},
     flake:{split:12, kernel:'brightness', palette:0, source:0, sourceB:1, jitter:.25, mix:.9, soft:.2, rotate:0},
+    plasma:{scale:0.45,drift:0.4,contrast:0.55,layers:0.5,flow:0.5},
+    laser:{beams:0.5,sweep:0.45,width:0.35,scatter:0.25,bloom:0.5},
+    scan:{bars:0.55,scroll:0.4,thick:0.4,gap:0.35,glow:0.5},
+    glitch:{blocks:0.5,tear:0.45,rgb:0.4,noise:0.35,hold:0.3},
+    field:{density:0.55,twinkle:0.5,depth:0.5,drift:0.35,hit:0.55},
+    blob:{count:0.5,size:0.45,merge:0.55,wobble:0.4,soft:0.5},
+    smoke:{density:0.55,curl:0.5,rise:0.45,soft:0.55,grain:0.3},
+    water:{waves:0.5,refract:0.45,depth:0.5,chop:0.35,shine:0.55},
+    aurora:{bands:0.5,warp:0.55,fade:0.4,spark:0.35,drift:0.4},
+    dust:{count:0.55,size:0.4,spark:0.5,drift:0.45,trail:0.4},
+    lattice:{cells:0.5,persp:0.55,spin:0.35,thick:0.4,fade:0.45},
+    voronoi:{cells:0.5,edge:0.55,animate:0.4,jitter:0.35,fill:0.45},
+    stars:{count:0.55,zoom:0.5,streak:0.4,twinkle:0.5,fog:0.35},
+    ribbon:{count:0.5,width:0.4,twist:0.45,wave:0.5,glow:0.55},
+    hex:{size:0.45,thick:0.4,pulse:0.5,warp:0.3,glow:0.5},
   };
 }
 function normalizeViz(v){
   const d=defaultViz();
   if(!v||typeof v!=='object')return d;
-  const tools=['tunnel','pulse','mirror','flake'];
+  const tools=['tunnel','pulse','mirror','flake','plasma','laser','scan','glitch','field','blob','smoke','water','aurora','dust','lattice','voronoi','stars','ribbon','hex'];
   const kernels=['brightness','hue','chaos','warm','average'];
-  const presets=['','rave','hypno','chop','ice','chaos','deep','soft','wire','acid','drift','grid','strobe'];
+  const presets=['','rave','hypno','chop','ice','chaos','deep','soft','wire','acid','drift','grid','strobe','smoke','laser','cells'];
   const tool=tools.includes(v.tool)?v.tool:d.tool;
   const f=v.flake&&typeof v.flake==='object'?v.flake:{};
   const tn=v.tunnel&&typeof v.tunnel==='object'?v.tunnel:{};
   const pu=v.pulse&&typeof v.pulse==='object'?v.pulse:{};
   const mi=v.mirror&&typeof v.mirror==='object'?v.mirror:{};
+  const _plasma=v.plasma&&typeof v.plasma==='object'?v.plasma:{};
+  const _laser=v.laser&&typeof v.laser==='object'?v.laser:{};
+  const _scan=v.scan&&typeof v.scan==='object'?v.scan:{};
+  const _glitch=v.glitch&&typeof v.glitch==='object'?v.glitch:{};
+  const _field=v.field&&typeof v.field==='object'?v.field:{};
+  const _blob=v.blob&&typeof v.blob==='object'?v.blob:{};
+  const _smoke=v.smoke&&typeof v.smoke==='object'?v.smoke:{};
+  const _water=v.water&&typeof v.water==='object'?v.water:{};
+  const _aurora=v.aurora&&typeof v.aurora==='object'?v.aurora:{};
+  const _dust=v.dust&&typeof v.dust==='object'?v.dust:{};
+  const _lattice=v.lattice&&typeof v.lattice==='object'?v.lattice:{};
+  const _voronoi=v.voronoi&&typeof v.voronoi==='object'?v.voronoi:{};
+  const _stars=v.stars&&typeof v.stars==='object'?v.stars:{};
+  const _ribbon=v.ribbon&&typeof v.ribbon==='object'?v.ribbon:{};
+  const _hex=v.hex&&typeof v.hex==='object'?v.hex:{};
   const preset=presets.includes(v.preset)?v.preset:(v.preset?String(v.preset):'');
+  const blends=['mix','add','screen','diff','flake'];
+  const blend=blends.includes(v.blend)?v.blend:d.blend;
+  let decks;
+  if(Array.isArray(v.decks)&&v.decks.length){
+    decks=[0,1,2,3].map(i=>{
+      const src=v.decks[i]&&typeof v.decks[i]==='object'?v.decks[i]:{};
+      const dt=(src.tool===''||src.tool==null)?'':(tools.includes(src.tool)?src.tool:'');
+      const di=clamp01(src.intensity, i===0?d.decks[0].intensity:0);
+      return {tool:dt, intensity:di};
+    });
+  }else{
+    // migrate old tool / toolB / layerMix
+    const toolB=(v.toolB===''||v.toolB==null)?'':(tools.includes(v.toolB)?v.toolB:'');
+    const mix=clamp01(v.layerMix,0);
+    const inten=clamp01(v.intensity,d.intensity);
+    decks=[
+      {tool, intensity:inten},
+      {tool:toolB, intensity:toolB?Math.max(0.35,mix):0},
+      {tool:'', intensity:0},
+      {tool:'', intensity:0},
+    ];
+  }
+  let editDeck=v.editDeck!=null?(v.editDeck|0):0;
+  if(editDeck<0||editDeck>3)editDeck=0;
+  const focusTool=decks[editDeck].tool||decks[0].tool||tool;
   return {
-    tool,
+    tool:focusTool||tool,
+    decks,
+    blend,
+    editDeck,
     intensity:clamp01(v.intensity,d.intensity),
     hue:((v.hue!=null?+v.hue:d.hue)%360+360)%360,
     speed:clamp01(v.speed,d.speed),
@@ -740,61 +1157,142 @@ function normalizeViz(v){
       soft:clamp01(f.soft,d.flake.soft),
       rotate:((f.rotate!=null?+f.rotate:d.flake.rotate)%360+360)%360,
     },
+    plasma:{
+      scale:clamp01(_plasma.scale,d.plasma.scale),
+      drift:clamp01(_plasma.drift,d.plasma.drift),
+      contrast:clamp01(_plasma.contrast,d.plasma.contrast),
+      layers:clamp01(_plasma.layers,d.plasma.layers),
+      flow:clamp01(_plasma.flow,d.plasma.flow),
+    },
+    laser:{
+      beams:clamp01(_laser.beams,d.laser.beams),
+      sweep:clamp01(_laser.sweep,d.laser.sweep),
+      width:clamp01(_laser.width,d.laser.width),
+      scatter:clamp01(_laser.scatter,d.laser.scatter),
+      bloom:clamp01(_laser.bloom,d.laser.bloom),
+    },
+    scan:{
+      bars:clamp01(_scan.bars,d.scan.bars),
+      scroll:clamp01(_scan.scroll,d.scan.scroll),
+      thick:clamp01(_scan.thick,d.scan.thick),
+      gap:clamp01(_scan.gap,d.scan.gap),
+      glow:clamp01(_scan.glow,d.scan.glow),
+    },
+    glitch:{
+      blocks:clamp01(_glitch.blocks,d.glitch.blocks),
+      tear:clamp01(_glitch.tear,d.glitch.tear),
+      rgb:clamp01(_glitch.rgb,d.glitch.rgb),
+      noise:clamp01(_glitch.noise,d.glitch.noise),
+      hold:clamp01(_glitch.hold,d.glitch.hold),
+    },
+    field:{
+      density:clamp01(_field.density,d.field.density),
+      twinkle:clamp01(_field.twinkle,d.field.twinkle),
+      depth:clamp01(_field.depth,d.field.depth),
+      drift:clamp01(_field.drift,d.field.drift),
+      hit:clamp01(_field.hit,d.field.hit),
+    },
+    blob:{
+      count:clamp01(_blob.count,d.blob.count),
+      size:clamp01(_blob.size,d.blob.size),
+      merge:clamp01(_blob.merge,d.blob.merge),
+      wobble:clamp01(_blob.wobble,d.blob.wobble),
+      soft:clamp01(_blob.soft,d.blob.soft),
+    },
+    smoke:{
+      density:clamp01(_smoke.density,d.smoke.density),
+      curl:clamp01(_smoke.curl,d.smoke.curl),
+      rise:clamp01(_smoke.rise,d.smoke.rise),
+      soft:clamp01(_smoke.soft,d.smoke.soft),
+      grain:clamp01(_smoke.grain,d.smoke.grain),
+    },
+    water:{
+      waves:clamp01(_water.waves,d.water.waves),
+      refract:clamp01(_water.refract,d.water.refract),
+      depth:clamp01(_water.depth,d.water.depth),
+      chop:clamp01(_water.chop,d.water.chop),
+      shine:clamp01(_water.shine,d.water.shine),
+    },
+    aurora:{
+      bands:clamp01(_aurora.bands,d.aurora.bands),
+      warp:clamp01(_aurora.warp,d.aurora.warp),
+      fade:clamp01(_aurora.fade,d.aurora.fade),
+      spark:clamp01(_aurora.spark,d.aurora.spark),
+      drift:clamp01(_aurora.drift,d.aurora.drift),
+    },
+    dust:{
+      count:clamp01(_dust.count,d.dust.count),
+      size:clamp01(_dust.size,d.dust.size),
+      spark:clamp01(_dust.spark,d.dust.spark),
+      drift:clamp01(_dust.drift,d.dust.drift),
+      trail:clamp01(_dust.trail,d.dust.trail),
+    },
+    lattice:{
+      cells:clamp01(_lattice.cells,d.lattice.cells),
+      persp:clamp01(_lattice.persp,d.lattice.persp),
+      spin:clamp01(_lattice.spin,d.lattice.spin),
+      thick:clamp01(_lattice.thick,d.lattice.thick),
+      fade:clamp01(_lattice.fade,d.lattice.fade),
+    },
+    voronoi:{
+      cells:clamp01(_voronoi.cells,d.voronoi.cells),
+      edge:clamp01(_voronoi.edge,d.voronoi.edge),
+      animate:clamp01(_voronoi.animate,d.voronoi.animate),
+      jitter:clamp01(_voronoi.jitter,d.voronoi.jitter),
+      fill:clamp01(_voronoi.fill,d.voronoi.fill),
+    },
+    stars:{
+      count:clamp01(_stars.count,d.stars.count),
+      zoom:clamp01(_stars.zoom,d.stars.zoom),
+      streak:clamp01(_stars.streak,d.stars.streak),
+      twinkle:clamp01(_stars.twinkle,d.stars.twinkle),
+      fog:clamp01(_stars.fog,d.stars.fog),
+    },
+    ribbon:{
+      count:clamp01(_ribbon.count,d.ribbon.count),
+      width:clamp01(_ribbon.width,d.ribbon.width),
+      twist:clamp01(_ribbon.twist,d.ribbon.twist),
+      wave:clamp01(_ribbon.wave,d.ribbon.wave),
+      glow:clamp01(_ribbon.glow,d.ribbon.glow),
+    },
+    hex:{
+      size:clamp01(_hex.size,d.hex.size),
+      thick:clamp01(_hex.thick,d.hex.thick),
+      pulse:clamp01(_hex.pulse,d.hex.pulse),
+      warp:clamp01(_hex.warp,d.hex.warp),
+      glow:clamp01(_hex.glow,d.hex.glow),
+    },
   };
 }
 const VIZ_PRESETS={
-  rave:{tool:'tunnel',intensity:.88,hue:330,speed:.7,trail:.5,flash:.45,beatSync:true,preset:'rave',
-    tunnel:{depth:.75,twist:.55,rings:.65,zoom:.55,fog:.2},
-    pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3}, mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},
-    flake:{split:10,kernel:'brightness',palette:0,source:1,sourceB:0,jitter:.2,mix:.9,soft:.15,rotate:0}},
-  hypno:{tool:'mirror',intensity:.8,hue:280,speed:.45,trail:.65,flash:.15,beatSync:true,preset:'hypno',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3}, pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},
-    mirror:{segs:10,zoom:.6,spin:.55,warp:.5,thick:.4},
-    flake:{split:8,kernel:'hue',palette:2,source:1,sourceB:2,jitter:.15,mix:.85,soft:.25,rotate:20}},
-  chop:{tool:'flake',intensity:.85,hue:20,speed:.6,trail:.25,flash:.35,beatSync:true,preset:'chop',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3}, pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3}, mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},
-    flake:{split:12,kernel:'brightness',palette:1,source:2,sourceB:1,jitter:.35,mix:.95,soft:.1,rotate:0}},
-  ice:{tool:'pulse',intensity:.75,hue:195,speed:.4,trail:.55,flash:.1,beatSync:true,preset:'ice',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},
-    pulse:{spread:.65,ripple:.7,grid:.25,glow:.75,spin:.2},
-    mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},
-    flake:{split:8,kernel:'average',palette:3,source:0,sourceB:3,jitter:.1,mix:.8,soft:.35,rotate:0}},
-  chaos:{tool:'flake',intensity:.95,hue:40,speed:.85,trail:.4,flash:.7,beatSync:true,preset:'chaos',
-    tunnel:{depth:.7,twist:.8,rings:.7,zoom:.6,fog:.15},
-    pulse:{spread:.7,ripple:.8,grid:.7,glow:.6,spin:.7},
-    mirror:{segs:14,zoom:.5,spin:.8,warp:.7,thick:.3},
-    flake:{split:14,kernel:'chaos',palette:4,source:3,sourceB:2,jitter:.8,mix:.98,soft:.05,rotate:45}},
-  deep:{tool:'tunnel',intensity:.7,hue:210,speed:.28,trail:.7,flash:0,beatSync:true,preset:'deep',
-    tunnel:{depth:.9,twist:.2,rings:.35,zoom:.3,fog:.65},
-    pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3}, mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45}, flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0}},
-  soft:{tool:'pulse',intensity:.65,hue:160,speed:.3,trail:.75,flash:0,beatSync:true,preset:'soft',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},
-    pulse:{spread:.8,ripple:.35,grid:.1,glow:.85,spin:.1},
-    mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45}, flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0}},
-  wire:{tool:'mirror',intensity:.85,hue:120,speed:.55,trail:.3,flash:.2,beatSync:true,preset:'wire',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3}, pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},
-    mirror:{segs:12,zoom:.5,spin:.35,warp:.15,thick:.75},
-    flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0}},
-  acid:{tool:'flake',intensity:.9,hue:70,speed:.65,trail:.35,flash:.25,beatSync:true,preset:'acid',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3}, pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3}, mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},
-    flake:{split:10,kernel:'hue',palette:1,source:0,sourceB:2,jitter:.4,mix:.92,soft:.15,rotate:15}},
-  drift:{tool:'mirror',intensity:.7,hue:300,speed:.2,trail:.8,flash:.05,beatSync:true,preset:'drift',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3}, pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},
-    mirror:{segs:6,zoom:.7,spin:.15,warp:.6,thick:.35},
-    flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0}},
-  grid:{tool:'pulse',intensity:.8,hue:40,speed:.5,trail:.25,flash:.15,beatSync:true,preset:'grid',
-    tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},
-    pulse:{spread:.4,ripple:.3,grid:.95,glow:.4,spin:.45},
-    mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45}, flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0}},
-  strobe:{tool:'tunnel',intensity:.95,hue:0,speed:.9,trail:.15,flash:1,beatSync:true,preset:'strobe',
-    tunnel:{depth:.6,twist:.7,rings:.8,zoom:.7,fog:.1},
-    pulse:{spread:.6,ripple:.9,grid:.5,glow:.7,spin:.6},
-    mirror:{segs:8,zoom:.5,spin:.7,warp:.4,thick:.5},
-    flake:{split:11,kernel:'chaos',palette:0,source:3,sourceB:1,jitter:.5,mix:.9,soft:.05,rotate:0}},
+  rave:{tool:'tunnel',intensity:0.88,hue:330,speed:0.7,trail:0.5,flash:0.45,beatSync:true,preset:'rave',tunnel:{depth:.75,twist:.55,rings:.65,zoom:.55,fog:.2},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  hypno:{tool:'mirror',intensity:0.8,hue:280,speed:0.45,trail:0.65,flash:0.15,beatSync:true,preset:'hypno',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:10,zoom:.6,spin:.55,warp:.5,thick:.4},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  chop:{tool:'flake',intensity:0.85,hue:20,speed:0.6,trail:0.25,flash:0.35,beatSync:true,preset:'chop',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:12,kernel:'brightness',palette:1,source:2,sourceB:1,jitter:.35,mix:.95,soft:.1,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  ice:{tool:'pulse',intensity:0.75,hue:195,speed:0.4,trail:0.55,flash:0.1,beatSync:true,preset:'ice',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.65,ripple:.7,grid:.25,glow:.75,spin:.2},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  chaos:{tool:'glitch',intensity:0.95,hue:40,speed:0.85,trail:0.4,flash:0.7,beatSync:true,preset:'chaos',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.7,tear:.8,rgb:.7,noise:.6,hold:.2},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  deep:{tool:'stars',intensity:0.7,hue:210,speed:0.28,trail:0.7,flash:0,beatSync:true,preset:'deep',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.7,zoom:.35,streak:.25,twinkle:.4,fog:.6},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  soft:{tool:'aurora',intensity:0.65,hue:160,speed:0.3,trail:0.75,flash:0,beatSync:true,preset:'soft',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.6,warp:.7,fade:.55,spark:.2,drift:.35},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  wire:{tool:'lattice',intensity:0.85,hue:120,speed:0.55,trail:0.3,flash:0.2,beatSync:true,preset:'wire',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.65,persp:.7,spin:.4,thick:.7,fade:.35},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  acid:{tool:'plasma',intensity:0.9,hue:70,speed:0.65,trail:0.35,flash:0.25,beatSync:true,preset:'acid',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.6,drift:.55,contrast:.7,layers:.75,flow:.65},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  drift:{tool:'mirror',intensity:0.7,hue:300,speed:0.2,trail:0.8,flash:0.05,beatSync:true,preset:'drift',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:6,zoom:.7,spin:.15,warp:.6,thick:.35},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  grid:{tool:'hex',intensity:0.8,hue:40,speed:0.5,trail:0.25,flash:0.15,beatSync:true,preset:'grid',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.5,thick:.55,pulse:.7,warp:.2,glow:.6}},
+  strobe:{tool:'field',intensity:0.95,hue:0,speed:0.9,trail:0.15,flash:1,beatSync:true,preset:'strobe',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.7,twinkle:.8,depth:.6,drift:.5,hit:.9},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  smoke:{tool:'smoke',intensity:0.75,hue:20,speed:0.35,trail:0.7,flash:0.05,beatSync:true,preset:'smoke',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.7,curl:.65,rise:.55,soft:.7,grain:.4},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  laser:{tool:'laser',intensity:0.9,hue:320,speed:0.7,trail:0.25,flash:0.4,beatSync:true,preset:'laser',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.7,sweep:.6,width:.3,scatter:.2,bloom:.7},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
+  cells:{tool:'voronoi',intensity:0.85,hue:180,speed:0.5,trail:0.35,flash:0.15,beatSync:true,preset:'cells',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.6,edge:.7,animate:.55,jitter:.45,fill:.5},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
 };
 function applyVizPreset(id){
   const p=VIZ_PRESETS[id]; if(!p)return;
   S.viz=normalizeViz(JSON.parse(JSON.stringify(p)));
+  const t=S.viz.tool||'tunnel';
+  const inten=S.viz.intensity!=null?S.viz.intensity:0.7;
+  S.viz.decks=[
+    {tool:t,intensity:inten},
+    {tool:'',intensity:0},
+    {tool:'',intensity:0},
+    {tool:'',intensity:0},
+  ];
+  S.viz.blend='mix'; S.viz.editDeck=0;
   syncVizUI(); syncPush(true);
 }
 function drumFactoryBanks(){
@@ -4050,12 +4548,772 @@ void main(){
   gl_FragColor=vec4(withTrail(col),1.0);
 }`;
 
+const VIZ_FS_PLASMA=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_plScale,u_plDrift,u_plContrast,u_plLayers,u_plFlow;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.8,u_speed);
+  float t=u_t*spd*mix(0.4,1.6,u_plFlow);
+  float sc=mix(1.2,5.5,u_plScale);
+  float layers=mix(1.0,4.0,u_plLayers);
+  float v=0.0;
+  for(int i=0;i<4;i++){
+    if(float(i)>=layers) break;
+    float fi=float(i);
+    vec2 q=p*sc*(1.0+fi*0.35)+vec2(t*u_plDrift*(0.3+fi*0.2), -t*0.25*(1.0+fi*0.15));
+    v+=sin(q.x+sin(q.y*1.3+t)+bass*3.0+fi)*cos(q.y*1.1-t*0.7+mid*2.0);
+  }
+  v/=layers;
+  v=pow(abs(v), mix(0.6,2.2,u_plContrast));
+  vec3 col=vec3(0.02,0.03,0.05);
+  col+=vec3(0.95,0.25,0.55)*(0.35+v)*(0.5+bass+u_punch*0.4);
+  col+=vec3(0.2,0.9,0.95)*smoothstep(0.2,0.9,v)*(0.3+mid);
+  col+=vec3(0.95,0.85,0.3)*high*v*0.5;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_LASER=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_lzBeams,u_lzSweep,u_lzWidth,u_lzScatter,u_lzBloom;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.25,2.0,u_speed);
+  float t=u_t*spd;
+  float n=mix(3.0,16.0,u_lzBeams);
+  float a=atan(p.y,p.x);
+  float r=length(p)+1e-4;
+  float sweep=t*mix(0.0,2.5,u_lzSweep)+bass*u_lzSweep*2.0;
+  float w=mix(0.02,0.12,u_lzWidth);
+  float beams=0.0;
+  for(int i=0;i<16;i++){
+    if(float(i)>=n) break;
+    float ang=float(i)/n*6.2831853+sweep+hash21(vec2(float(i),2.0))*u_lzScatter*1.5;
+    float d=abs(fract((a-ang)/6.2831853+0.5)-0.5)*6.2831853*r;
+    beams+=smoothstep(w*(1.0+u_punch),0.0,d);
+  }
+  float bloom=pow(beams, mix(1.8,0.6,u_lzBloom));
+  vec3 col=vec3(0.01,0.015,0.03);
+  col+=vec3(1.0,0.2,0.45)*beams*(0.5+bass+u_punch);
+  col+=vec3(0.4,0.95,1.0)*bloom*mid*u_lzBloom;
+  col+=vec3(1.0,0.9,0.5)*high*beams*0.4;
+  float glow=pow(1.0-smoothstep(0.0,1.4,r),2.0);
+  col*=0.55+0.45*glow;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.45,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_SCAN=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_scBars,u_scScroll,u_scThick,u_scGap,u_scGlow;
+void main(){
+  vec2 uv=v_uv;
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.8,u_speed);
+  float t=u_t*spd;
+  float bars=mix(8.0,48.0,u_scBars);
+  float scroll=t*mix(0.0,1.2,u_scScroll);
+  float x=fract(uv.x*bars+scroll);
+  float gap=mix(0.05,0.45,u_scGap);
+  float thick=mix(0.15,0.85,u_scThick);
+  float barMask=smoothstep(gap,gap+0.02,x)*smoothstep(thick,thick-0.02,x);
+  float sx=sf(clamp(uv.x,0.001,0.999));
+  float h=0.12+sx*0.75+bass*0.15+u_punch*0.1;
+  float vbar=smoothstep(h+0.02,h-0.02,1.0-uv.y)*barMask;
+  float scanline=0.85+0.15*sin(uv.y*u_res.y*3.14159+t*20.0);
+  vec3 col=vec3(0.02,0.03,0.04);
+  col+=vec3(0.2,0.95,0.75)*vbar*(0.4+mid)*mix(0.5,1.4,u_scGlow);
+  col+=vec3(1.0,0.35,0.55)*smoothstep(0.08,0.0,abs(1.0-uv.y-h))*barMask*bass;
+  col+=vec3(0.9,0.9,0.3)*high*vbar*0.35;
+  col*=scanline;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_GLITCH=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_glBlocks,u_glTear,u_glRgb,u_glNoise,u_glHold;
+void main(){
+  vec2 uv=v_uv;
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.3,2.2,u_speed);
+  float t=u_t*spd;
+  float hold=mix(8.0,2.0,u_glHold);
+  float bt=floor(t*hold);
+  float blocks=mix(4.0,24.0,u_glBlocks);
+  vec2 cell=floor(uv*blocks);
+  float rnd=hash21(cell+bt);
+  float tearAmt=u_glTear*(0.4+bass+u_punch)*step(0.55,rnd);
+  uv.x+=sin(cell.y*3.0+bt)*tearAmt*0.25;
+  uv.y+=step(0.85,rnd)*tearAmt*0.08*(hash21(cell.yx+bt)-0.5);
+  float rgb=u_glRgb*(0.3+high+u_punch*0.5);
+  float r=sf(clamp(uv.x+rgb*0.04,0.001,0.999));
+  float g=sf(clamp(uv.x,0.001,0.999));
+  float b=sf(clamp(uv.x-rgb*0.04,0.001,0.999));
+  float n=hash21(floor(uv*vec2(80.0,40.0))+bt);
+  vec3 col=vec3(r,g*0.7+mid*0.3,b*0.5+bass);
+  col=mix(col, vec3(n), u_glNoise*step(0.7,rnd)*0.6);
+  col+=vec3(1.0,0.2,0.4)*tearAmt*0.5;
+  float bandY=abs(fract(uv.y*6.0+t)-0.5);
+  col+=vec3(0.3,0.9,1.0)*smoothstep(0.08,0.0,bandY)*u_glTear*mid;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.3,1.45,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_FIELD=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_fdDensity,u_fdTwinkle,u_fdDepth,u_fdDrift,u_fdHit;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.8,u_speed);
+  float t=u_t*spd;
+  float dens=mix(12.0,48.0,u_fdDensity);
+  vec2 drift=vec2(t*u_fdDrift*0.15, t*0.08);
+  float depth=mix(0.5,2.5,u_fdDepth);
+  float acc=0.0;
+  for(int i=0;i<3;i++){
+    float fi=float(i);
+    vec2 q=(p+drift*(1.0+fi*0.3))*dens*(1.0+fi*0.4);
+    vec2 id=floor(q);
+    vec2 f=fract(q)-0.5;
+    float rnd=hash21(id+fi*17.0);
+    float tw=0.5+0.5*sin(t*mix(2.0,10.0,u_fdTwinkle)+rnd*6.28);
+    float d=length(f+(rnd-0.5)*0.3);
+    float star=smoothstep(0.12,0.0,d)*tw*pow(rnd,0.4);
+    star*=mix(1.0, depth/(fi+1.0), u_fdDepth);
+    acc+=star;
+  }
+  float hit=pow(max(bass,u_punch),1.5)*u_fdHit;
+  vec3 col=vec3(0.01,0.015,0.03);
+  col+=vec3(0.85,0.9,1.0)*acc*(0.4+high);
+  col+=vec3(1.0,0.45,0.7)*hit*(0.5+acc);
+  col+=vec3(0.3,0.95,0.9)*mid*acc*0.5;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_BLOB=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_blCount,u_blSize,u_blMerge,u_blWobble,u_blSoft;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.6,u_speed);
+  float t=u_t*spd;
+  float n=mix(3.0,9.0,u_blCount);
+  float sz=mix(0.8,2.8,u_blSize);
+  float field=0.0;
+  for(int i=0;i<9;i++){
+    if(float(i)>=n) break;
+    float fi=float(i);
+    float a=fi/n*6.2831853+t*0.3;
+    vec2 c=vec2(cos(a+fi),sin(a*1.3+fi*0.7))*mix(0.15,0.7,0.4+0.6*hash21(vec2(fi,1.0)));
+    c+=u_blWobble*0.25*vec2(sin(t*1.5+fi*2.0+bass*3.0),cos(t*1.2+fi+mid*2.0));
+    float d=length(p-c);
+    field+=sz/(d*d*40.0+1.0);
+  }
+  field*=mix(0.6,1.6,u_blMerge);
+  float edge=mix(0.35,0.08,u_blSoft);
+  float blob=smoothstep(1.0+edge,1.0-edge,field);
+  vec3 col=vec3(0.03,0.04,0.06);
+  col+=vec3(0.95,0.3,0.6)*blob*(0.5+bass+u_punch*0.4);
+  col+=vec3(0.25,0.85,0.95)*smoothstep(0.6,1.4,field)*mid*0.6;
+  col+=vec3(1.0,0.85,0.4)*high*blob*0.35;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_SMOKE=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_smDensity,u_smCurl,u_smRise,u_smSoft,u_smGrain;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.15,1.4,u_speed);
+  float t=u_t*spd;
+  vec2 q=p;
+  q.y-=t*mix(0.1,0.7,u_smRise);
+  float curl=u_smCurl;
+  for(int i=0;i<3;i++){
+    float n1=fbm(q*1.5+t*0.2);
+    float n2=fbm(q*1.5+vec2(5.2,1.3)-t*0.15);
+    q+=curl*0.35*vec2(n1-0.5,n2-0.5);
+  }
+  float dens=mix(0.8,2.5,u_smDensity);
+  float s=fbm(q*dens+bass);
+  s=pow(s, mix(0.7,1.8,1.0-u_smSoft));
+  float grain=hash21(floor(v_uv*u_res*0.5)+floor(t*10.0));
+  s=mix(s, s*grain, u_smGrain*0.5);
+  vec3 col=vec3(0.02,0.025,0.04);
+  col+=vec3(0.55,0.6,0.7)*s*(0.4+mid);
+  col+=vec3(0.9,0.35,0.5)*s*bass*(0.3+u_punch);
+  col+=vec3(0.3,0.85,0.9)*high*s*0.4;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.35,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_WATER=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_waWaves,u_waRefract,u_waDepth,u_waChop,u_waShine;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.6,u_speed);
+  float t=u_t*spd;
+  float wv=mix(2.0,10.0,u_waWaves);
+  float chop=u_waChop;
+  vec2 q=p;
+  q+=u_waRefract*0.15*vec2(
+    sin(p.y*wv+t*2.0+bass*4.0),
+    cos(p.x*wv*0.9-t*1.5+mid*3.0)
+  );
+  q+=chop*0.08*vec2(noise2(p*8.0+t)-0.5, noise2(p*8.0+t+3.0)-0.5);
+  float caust=0.5+0.5*sin(q.x*wv+t)*sin(q.y*wv*1.1-t*0.8);
+  caust=pow(caust, mix(1.0,3.0,u_waDepth));
+  float shine=pow(caust, mix(2.0,6.0,u_waShine))*(0.4+high);
+  vec3 col=vec3(0.02,0.06,0.1);
+  col+=vec3(0.15,0.55,0.85)*caust*(0.5+mid);
+  col+=vec3(0.4,0.95,1.0)*shine;
+  col+=vec3(0.95,0.5,0.7)*bass*u_punch*0.4*(1.0-length(p)*0.5);
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_AURORA=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_auBands,u_auWarp,u_auFade,u_auSpark,u_auDrift;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.15,1.3,u_speed);
+  float t=u_t*spd;
+  float bands=mix(2.0,8.0,u_auBands);
+  float x=p.x+u_auWarp*0.4*sin(p.y*3.0+t+fbm(p*2.0+t*0.2)*2.0);
+  x+=u_auDrift*0.2*t;
+  float curtain=0.0;
+  for(int i=0;i<8;i++){
+    if(float(i)>=bands) break;
+    float fi=float(i);
+    float cx=sin(fi*1.7+t*0.3)*0.6;
+    float w=0.15+0.1*sin(fi+t);
+    curtain+=exp(-pow((x-cx)/w,2.0))* (0.5+0.5*sin(p.y*4.0+fi+t+mid*3.0));
+  }
+  float fade=pow(1.0-smoothstep(-0.2,1.0,p.y), mix(0.5,2.2,u_auFade));
+  float spark=hash21(floor(v_uv*vec2(60.0,30.0))+floor(t*5.0));
+  spark=step(1.0-u_auSpark*0.25,spark)*high;
+  vec3 col=vec3(0.01,0.02,0.04);
+  col+=vec3(0.2,0.95,0.55)*curtain*fade*(0.4+mid);
+  col+=vec3(0.55,0.3,0.95)*curtain*fade*0.5*(0.3+bass);
+  col+=vec3(1.0,0.85,0.5)*spark*u_auSpark;
+  col+=vec3(1.0,0.4,0.7)*u_punch*curtain*0.35;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.35,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_DUST=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_duCount,u_duSize,u_duSpark,u_duDrift,u_duTrail;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.5,u_speed);
+  float t=u_t*spd;
+  float dens=mix(10.0,40.0,u_duCount);
+  vec2 drift=vec2(sin(t*0.3)*u_duDrift*0.2, t*u_duDrift*0.15);
+  vec2 q=(p+drift)*dens;
+  vec2 id=floor(q);
+  vec2 f=fract(q)-0.5;
+  float rnd=hash21(id);
+  vec2 off=(vec2(hash21(id+1.0),hash21(id+2.0))-0.5)*0.6;
+  float sz=mix(0.15,0.04,u_duSize)*(0.5+rnd);
+  float d=length(f-off);
+  float pt=smoothstep(sz,0.0,d);
+  float spark=pow(pt, mix(1.0,3.0,u_duSpark))*(0.5+0.5*sin(t*8.0+rnd*20.0));
+  float trail=u_duTrail*smoothstep(sz*3.0,0.0,abs(f.x-off.x))*smoothstep(0.5, -0.2, f.y-off.y)*rnd;
+  vec3 col=vec3(0.02,0.025,0.04);
+  col+=vec3(0.9,0.85,0.7)*pt*(0.4+high);
+  col+=vec3(1.0,0.5,0.3)*spark*u_duSpark;
+  col+=vec3(0.4,0.8,1.0)*trail;
+  col+=vec3(1.0,0.3,0.55)*bass*u_punch*pt;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_LATTICE=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_laCells,u_laPersp,u_laSpin,u_laThick,u_laFade;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.8,u_speed);
+  float t=u_t*spd;
+  p=rot2(t*mix(0.0,1.0,u_laSpin)+bass*0.3)*p;
+  float persp=mix(0.3,1.4,u_laPersp);
+  float z=1.0/(abs(p.y)*persp+0.35);
+  vec2 q=vec2(p.x*z, z+t*0.4);
+  float cells=mix(3.0,14.0,u_laCells);
+  vec2 g=abs(fract(q*cells)-0.5);
+  float thick=mix(0.08,0.02,u_laThick);
+  float grid=smoothstep(thick,0.0,min(g.x,g.y));
+  float fade=pow(smoothstep(0.0,1.2,z), mix(0.4,2.0,u_laFade));
+  vec3 col=vec3(0.02,0.03,0.05);
+  col+=vec3(0.3,0.95,0.7)*grid*fade*(0.4+mid);
+  col+=vec3(1.0,0.35,0.6)*grid*bass*(0.3+u_punch);
+  col+=vec3(0.9,0.9,0.4)*high*grid*0.35*fade;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_VORONOI=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_voCells,u_voEdge,u_voAnim,u_voJitter,u_voFill;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.6,u_speed);
+  float t=u_t*spd*mix(0.0,1.5,u_voAnim);
+  float scale=mix(2.0,9.0,u_voCells);
+  vec2 g=p*scale;
+  vec2 i=floor(g);
+  float md=8.0, md2=8.0;
+  vec2 mg=vec2(0.0);
+  for(int y=-1;y<=1;y++){
+    for(int x=-1;x<=1;x++){
+      vec2 b=vec2(float(x),float(y));
+      vec2 o=vec2(hash21(i+b),hash21(i+b+19.0));
+      o=0.5+0.5*sin(t+6.2831853*o)*mix(0.2,1.0,u_voJitter);
+      vec2 r=b+o-fract(g);
+      float d=dot(r,r);
+      if(d<md){md2=md;md=d;mg=r;}
+      else if(d<md2){md2=d;}
+    }
+  }
+  float edge=sqrt(md2)-sqrt(md);
+  float e=smoothstep(0.0, mix(0.02,0.2,u_voEdge), edge);
+  float fill=u_voFill*(0.5+0.5*sin(md*20.0+t+bass*4.0));
+  vec3 col=vec3(0.03,0.04,0.06);
+  col+=vec3(0.25,0.8,0.95)*(1.0-e)*(0.4+mid);
+  col+=vec3(0.95,0.3,0.55)*fill*(1.0-e)*0.6;
+  col+=vec3(1.0,0.9,0.4)*e*high*0.5;
+  col+=vec3(1.0,0.5,0.7)*u_punch*(1.0-e)*0.35;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_STARS=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_stCount,u_stZoom,u_stStreak,u_stTwinkle,u_stFog;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.3,2.2,u_speed);
+  float t=u_t*spd*mix(0.4,1.8,u_stZoom);
+  float acc=0.0;
+  float n=mix(20.0,80.0,u_stCount);
+  // layered starfield via hash grid
+  for(int layer=0;layer<3;layer++){
+    float fl=float(layer);
+    float z=fract(t*0.15*(1.0+fl*0.35)+fl*0.3);
+    float zoom=mix(0.6,2.5,z);
+    vec2 q=p*zoom*mix(8.0,28.0,u_stCount*0.5+fl*0.1);
+    vec2 id=floor(q);
+    vec2 f=fract(q)-0.5;
+    float rnd=hash21(id+fl*31.0);
+    float tw=0.5+0.5*sin(u_t*mix(3.0,12.0,u_stTwinkle)+rnd*40.0);
+    float d=length(f);
+    float star=smoothstep(0.08,0.0,d)*step(0.72,rnd)*tw;
+    float streak=u_stStreak*smoothstep(0.2,0.0,abs(f.x))*smoothstep(0.4,0.0,abs(f.y))*step(0.8,rnd)*z;
+    acc+=star*(1.0-z)+streak;
+  }
+  float fog=mix(1.0,0.35,u_stFog)*exp(-length(p)*mix(0.2,1.2,u_stFog));
+  vec3 col=vec3(0.005,0.01,0.03);
+  col+=vec3(0.9,0.92,1.0)*acc*fog;
+  col+=vec3(1.0,0.4,0.7)*bass*u_punch*0.4*fog;
+  col+=vec3(0.3,0.8,1.0)*mid*acc*0.3;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_RIBBON=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_riCount,u_riWidth,u_riTwist,u_riWave,u_riGlow;
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.8,u_speed);
+  float t=u_t*spd;
+  float n=mix(2.0,8.0,u_riCount);
+  float w=mix(0.04,0.18,u_riWidth);
+  float acc=0.0;
+  vec3 col=vec3(0.02,0.03,0.05);
+  for(int i=0;i<8;i++){
+    if(float(i)>=n) break;
+    float fi=float(i);
+    float phase=fi/n*6.2831853;
+    float yy=p.y;
+    float xx=p.x-sin(yy*mix(1.0,5.0,u_riWave)+t*1.5+phase+bass*2.0)*mix(0.1,0.6,u_riTwist);
+    xx-=sin(yy*2.0-t+fi)*0.1*u_riWave;
+    float d=abs(xx);
+    float rib=smoothstep(w,0.0,d);
+    float sx=sf(clamp(0.5+yy*0.4,0.001,0.999));
+    rib*=0.5+sx;
+    float glow=exp(-d*mix(4.0,14.0,u_riGlow))*u_riGlow;
+    vec3 tint=hueShift(vec3(0.95,0.3,0.55), fi/n+u_hue/360.0);
+    col+=tint*rib*(0.45+mid);
+    col+=tint*glow*0.4;
+    acc+=rib;
+  }
+  col+=vec3(1.0,0.85,0.4)*high*acc*0.3;
+  col+=vec3(1.0,0.4,0.7)*u_punch*acc*0.35;
+  col=hueShift(col,0.0); // already shifted per ribbon
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+const VIZ_FS_HEX=VIZ_COMMON+`
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  float a=hash21(i), b=hash21(i+vec2(1.0,0.0));
+  float c=hash21(i+vec2(0.0,1.0)), d=hash21(i+vec2(1.0,1.0));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0, a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise2(p);p*=2.02;a*=0.5;}
+  return v;
+}
+mat2 rot2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+uniform float u_hxSize,u_hxThick,u_hxPulse,u_hxWarp,u_hxGlow;
+vec2 hexCenter(vec2 p){
+  vec2 r=vec2(1.0,1.7320508);
+  vec2 h=r*0.5;
+  vec2 a=mod(p,r)-h;
+  vec2 b=mod(p+h,r)-h;
+  return dot(a,a)<dot(b,b)?a:b;
+}
+void main(){
+  vec2 p=(v_uv*2.0-1.0); p.x*=u_res.x/max(u_res.y,1.0);
+  float bass=band(0.0,0.14), mid=band(0.14,0.45), high=band(0.5,0.95);
+  float spd=mix(0.2,1.8,u_speed);
+  float t=u_t*spd;
+  p+=u_hxWarp*0.2*vec2(sin(p.y*3.0+t),cos(p.x*3.0-t));
+  float sz=mix(2.0,10.0,u_hxSize);
+  vec2 h=hexCenter(p*sz);
+  float d=max(abs(h.x)*1.0, abs(h.x)*0.5+abs(h.y)*0.866025);
+  float thick=mix(0.12,0.03,u_hxThick);
+  float edge=smoothstep(thick,0.0,abs(d-0.45));
+  float pulse=0.5+0.5*sin(length(floor(p*sz))*2.0+t*3.0+bass*6.0);
+  pulse=mix(1.0, pulse, u_hxPulse);
+  float fill=smoothstep(0.48,0.2,d)*u_hxPulse*0.35*(0.4+bass+u_punch);
+  float glow=exp(-d*mix(1.0,4.0,u_hxGlow))*u_hxGlow*mid;
+  vec3 col=vec3(0.02,0.03,0.05);
+  col+=vec3(0.3,0.95,0.7)*edge*pulse*(0.5+mid);
+  col+=vec3(0.95,0.35,0.6)*fill;
+  col+=vec3(0.9,0.9,0.4)*glow*high;
+  col=hueShift(col,u_hue/360.0);
+  col*=mix(0.25,1.4,u_intensity);
+  gl_FragColor=vec4(withTrail(col),1.0);
+}`;
+
+const VIZ_FS_COMP=VIZ_COMMON+`
+uniform sampler2D u_d0,u_d1,u_d2,u_d3;
+uniform float u_w0,u_w1,u_w2,u_w3;
+uniform float u_n,u_blendMode;
+uniform float u_split,u_kernel,u_jitter,u_mix,u_soft;
+float lum3(vec3 c){return dot(c,vec3(0.299,0.587,0.114));}
+float kdelta(vec3 a,vec3 b){
+  float la=lum3(a), lb=lum3(b);
+  if(u_kernel<0.5) return abs(la-lb);
+  if(u_kernel<1.5) return abs(a.r-b.r)+abs(a.g-b.g)*0.5;
+  if(u_kernel<2.5){
+    float rnd=fract(sin(dot(a.rg+b.gb,vec2(12.9898,78.233)))*43758.5453);
+    return abs(la-lb)+rnd*0.45;
+  }
+  if(u_kernel<3.5) return abs((a.r+a.g*0.5-a.b)-(b.r+b.g*0.5-b.b))*0.5;
+  return (abs(a.r-b.r)+abs(a.g-b.g)+abs(a.b-b.b))/3.0;
+}
+vec3 flakePair(sampler2D A, sampler2D B){
+  float split=floor(clamp(u_split,4.0,16.0)+0.5);
+  float j=clamp(u_jitter,0.0,1.0);
+  vec2 baseCell=floor(v_uv*split);
+  float rnd=fract(sin(dot(baseCell,vec2(12.9898,78.233)))*43758.5453);
+  float factor=1.0+j*rnd*1.75;
+  float localSplit=max(2.0, split/factor);
+  vec2 srcCell=floor(v_uv*localSplit);
+  vec2 cellUv=fract(v_uv*localSplit);
+  vec2 srcOrigin=srcCell/localSplit;
+  vec3 aCol=texture2D(A, srcOrigin+(0.5/localSplit)).rgb;
+  float best=1e9;
+  vec2 bestOrigin=vec2(0.0);
+  for(int i=0;i<16;i++){
+    for(int jj=0;jj<16;jj++){
+      if(float(i)>=split||float(jj)>=split) continue;
+      vec2 origin=vec2(float(i),float(jj))/split;
+      vec3 bCol=texture2D(B, origin+(0.5/split)).rgb;
+      float d=kdelta(aCol,bCol);
+      if(d<best){ best=d; bestOrigin=origin; }
+    }
+  }
+  vec3 remapped=texture2D(B, bestOrigin+cellUv/split).rgb;
+  float edge=smoothstep(0.0, mix(0.02,0.35,u_soft), min(min(cellUv.x,cellUv.y),min(1.0-cellUv.x,1.0-cellUv.y)));
+  vec3 col=mix(aCol, remapped, clamp(u_mix,0.0,1.0));
+  return mix(col*0.55, col, edge);
+}
+vec3 blend2(vec3 a, vec3 b, float mode){
+  if(mode<0.5) return mix(a,b,0.5);
+  if(mode<1.5) return a+b;
+  if(mode<2.5) return 1.0-(1.0-a)*(1.0-b);
+  return abs(a-b);
+}
+void main(){
+  vec3 t0=texture2D(u_d0,v_uv).rgb;
+  vec3 t1=texture2D(u_d1,v_uv).rgb;
+  vec3 t2=texture2D(u_d2,v_uv).rgb;
+  vec3 t3=texture2D(u_d3,v_uv).rgb;
+  float w0=u_w0,w1=u_w1,w2=u_w2,w3=u_w3;
+  vec3 col=vec3(0.0);
+  if(u_blendMode>3.5){
+    // flake: remap first two active-looking decks, then add the rest
+    if(u_n<1.5){ col=t0*w0; }
+    else{
+      col=flakePair(u_d0,u_d1);
+      float tw=max(0.001,w0+w1);
+      col*=tw;
+      if(u_n>2.5) col+=t2*w2;
+      if(u_n>3.5) col+=t3*w3;
+    }
+  }else if(u_blendMode<0.5){
+    // intensity-weighted mix
+    float s=max(0.001,w0+w1+w2+w3);
+    col=(t0*w0+t1*w1+t2*w2+t3*w3)/s;
+  }else{
+    // stack blend starting from first
+    col=t0*w0;
+    if(u_n>1.5) col=blend2(col, t1*w1, u_blendMode);
+    if(u_n>2.5) col=blend2(col, t2*w2, u_blendMode);
+    if(u_n>3.5) col=blend2(col, t3*w3, u_blendMode);
+  }
+  col=withTrail(col);
+  gl_FragColor=vec4(clamp(col,0.0,1.5),1.0);
+}
+`;
+
 function vizCacheLocs(name,prog){
   const gl=VIZ.gl;
   const keys=['a_pos','u_res','u_t','u_bpm','u_beat','u_intensity','u_hue','u_speed','u_playing','u_trail','u_punch',
     'u_freq','u_prev','u_split','u_kernel','u_srcMode','u_srcModeB','u_jitter','u_mix','u_soft','u_rotate',
     'u_depth','u_twist','u_rings','u_zoom','u_fog','u_spread','u_ripple','u_gridAmt','u_glow','u_spin',
-    'u_segs','u_warp','u_thick','u_pal0','u_pal1','u_pal2','u_pal3'];
+    'u_segs','u_warp','u_thick','u_pal0','u_pal1','u_pal2','u_pal3',
+    'u_plScale','u_plDrift','u_plContrast','u_plLayers','u_plFlow','u_lzBeams','u_lzSweep','u_lzWidth','u_lzScatter','u_lzBloom',
+    'u_scBars','u_scScroll','u_scThick','u_scGap','u_scGlow','u_glBlocks','u_glTear','u_glRgb','u_glNoise','u_glHold',
+    'u_fdDensity','u_fdTwinkle','u_fdDepth','u_fdDrift','u_fdHit','u_blCount','u_blSize','u_blMerge','u_blWobble','u_blSoft',
+    'u_smDensity','u_smCurl','u_smRise','u_smSoft','u_smGrain','u_waWaves','u_waRefract','u_waDepth','u_waChop','u_waShine',
+    'u_auBands','u_auWarp','u_auFade','u_auSpark','u_auDrift','u_duCount','u_duSize','u_duSpark','u_duDrift','u_duTrail',
+    'u_laCells','u_laPersp','u_laSpin','u_laThick','u_laFade','u_voCells','u_voEdge','u_voAnim','u_voJitter','u_voFill',
+    'u_stCount','u_stZoom','u_stStreak','u_stTwinkle','u_stFog','u_riCount','u_riWidth','u_riTwist','u_riWave','u_riGlow',
+    'u_hxSize','u_hxThick','u_hxPulse','u_hxWarp','u_hxGlow','u_d0','u_d1','u_d2','u_d3','u_w0','u_w1','u_w2','u_w3','u_n','u_blendMode'];
   const o={};
   for(const k of keys){
     if(k==='a_pos')o[k]=gl.getAttribLocation(prog,k);
@@ -4085,10 +5343,47 @@ function initViz(){
   const pulse=linkProg(gl,VIZ_VS,VIZ_FS_PULSE);
   const mirror=linkProg(gl,VIZ_VS,VIZ_FS_MIRROR);
   const flake=linkProg(gl,VIZ_VS,VIZ_FS_FLAKE);
-  if(!tunnel||!pulse||!mirror||!flake)return false;
-  VIZ.prog={tunnel,pulse,mirror,flake};
-  vizCacheLocs('tunnel',tunnel);vizCacheLocs('pulse',pulse);
-  vizCacheLocs('mirror',mirror);vizCacheLocs('flake',flake);
+  const plasma=linkProg(gl,VIZ_VS,VIZ_FS_PLASMA);
+  const laser=linkProg(gl,VIZ_VS,VIZ_FS_LASER);
+  const scan=linkProg(gl,VIZ_VS,VIZ_FS_SCAN);
+  const glitch=linkProg(gl,VIZ_VS,VIZ_FS_GLITCH);
+  const field=linkProg(gl,VIZ_VS,VIZ_FS_FIELD);
+  const blob=linkProg(gl,VIZ_VS,VIZ_FS_BLOB);
+  const smoke=linkProg(gl,VIZ_VS,VIZ_FS_SMOKE);
+  const water=linkProg(gl,VIZ_VS,VIZ_FS_WATER);
+  const aurora=linkProg(gl,VIZ_VS,VIZ_FS_AURORA);
+  const dust=linkProg(gl,VIZ_VS,VIZ_FS_DUST);
+  const lattice=linkProg(gl,VIZ_VS,VIZ_FS_LATTICE);
+  const voronoi=linkProg(gl,VIZ_VS,VIZ_FS_VORONOI);
+  const stars=linkProg(gl,VIZ_VS,VIZ_FS_STARS);
+  const ribbon=linkProg(gl,VIZ_VS,VIZ_FS_RIBBON);
+  const hex=linkProg(gl,VIZ_VS,VIZ_FS_HEX);
+  const comp=linkProg(gl,VIZ_VS,VIZ_FS_COMP);
+  if(!tunnel||!pulse||!mirror||!flake||!plasma||!laser||!scan||!glitch||!field||!blob||!smoke||!water||!aurora||!dust||!lattice||!voronoi||!stars||!ribbon||!hex||!comp)return false;
+  VIZ.prog={tunnel,pulse,mirror,flake,plasma,laser,scan,glitch,field,blob,smoke,water,aurora,dust,lattice,voronoi,stars,ribbon,hex,comp};
+  vizCacheLocs('tunnel',tunnel);
+  vizCacheLocs('pulse',pulse);
+  vizCacheLocs('mirror',mirror);
+  vizCacheLocs('flake',flake);
+  vizCacheLocs('plasma',plasma);
+  vizCacheLocs('laser',laser);
+  vizCacheLocs('scan',scan);
+  vizCacheLocs('glitch',glitch);
+  vizCacheLocs('field',field);
+  vizCacheLocs('blob',blob);
+  vizCacheLocs('smoke',smoke);
+  vizCacheLocs('water',water);
+  vizCacheLocs('aurora',aurora);
+  vizCacheLocs('dust',dust);
+  vizCacheLocs('lattice',lattice);
+  vizCacheLocs('voronoi',voronoi);
+  vizCacheLocs('stars',stars);
+  vizCacheLocs('ribbon',ribbon);
+  vizCacheLocs('hex',hex);
+  vizCacheLocs('comp',comp);
+  VIZ.deckTex=[makeTex(gl),makeTex(gl),makeTex(gl),makeTex(gl)];
+  VIZ.deckFbo=[gl.createFramebuffer(),gl.createFramebuffer(),gl.createFramebuffer(),gl.createFramebuffer()];
+  VIZ.layerW=0; VIZ.layerH=0;
   VIZ.buf=gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,1,-1,-1,1,1,1,-1]),gl.STATIC_DRAW);
@@ -4107,6 +5402,18 @@ function vizEnsurePrevSize(w,h){
   gl.bindTexture(gl.TEXTURE_2D,VIZ.prevTex);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
   VIZ.prevW=w; VIZ.prevH=h;
+}
+function vizEnsureLayerSize(w,h){
+  const gl=VIZ.gl;
+  if(VIZ.layerW===w&&VIZ.layerH===h)return;
+  for(let i=0;i<4;i++){
+    gl.bindTexture(gl.TEXTURE_2D,VIZ.deckTex[i]);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,VIZ.deckFbo[i]);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,VIZ.deckTex[i],0);
+  }
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  VIZ.layerW=w; VIZ.layerH=h;
 }
 function vizResize(){
   if(!VIZ.ready)return;
@@ -4170,40 +5477,34 @@ function vizPunchLevel(t,beat){
   VIZ.punch=Math.max(m, (VIZ.punch||0)*0.82);
   return VIZ.punch;
 }
-function renderViz(){
-  if(!isVizVisible())return;
-  if(!VIZ.ready&&!initViz())return;
-  if(VIZ.reduced&&!S.playing)return;
-  vizResize();
+function vizDrawTool(tool, trailAmt, t, beat, punch, intensity){
   const gl=VIZ.gl;
-  const tool=S.viz.tool in VIZ.prog?S.viz.tool:'tunnel';
+  tool=tool in VIZ.prog && tool!=='comp'?tool:'tunnel';
   const prog=VIZ.prog[tool];
   const L=VIZ.locs[tool];
   gl.useProgram(prog);
   gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
-  gl.enableVertexAttribArray(L.a_pos);
-  gl.vertexAttribPointer(L.a_pos,2,gl.FLOAT,false,0,0);
-  uploadFFT();
+  if(L.a_pos>=0){
+    gl.enableVertexAttribArray(L.a_pos);
+    gl.vertexAttribPointer(L.a_pos,2,gl.FLOAT,false,0,0);
+  }
   const canvas=gl.canvas;
-  vizEnsurePrevSize(canvas.width, canvas.height);
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D,VIZ.fftTex);
   if(L.u_freq) gl.uniform1i(L.u_freq,0);
   gl.activeTexture(gl.TEXTURE1);
   gl.bindTexture(gl.TEXTURE_2D,VIZ.prevTex);
   if(L.u_prev) gl.uniform1i(L.u_prev,1);
-  const t=(performance.now()/1000)-VIZ.t0;
-  const beat=vizBeatPhase(t);
-  const punch=vizPunchLevel(t,beat)*clamp01(S.viz.flash,0.2);
+  const inten=intensity!=null?intensity:S.viz.intensity;
   gl.uniform2f(L.u_res,canvas.width,canvas.height);
   gl.uniform1f(L.u_t,t);
   gl.uniform1f(L.u_bpm,S.bpm||172);
   gl.uniform1f(L.u_beat,beat);
-  gl.uniform1f(L.u_intensity,S.viz.intensity);
+  gl.uniform1f(L.u_intensity,inten);
   gl.uniform1f(L.u_hue,S.viz.hue);
   gl.uniform1f(L.u_speed,S.viz.speed);
   gl.uniform1f(L.u_playing,S.playing?1:0);
-  if(L.u_trail) gl.uniform1f(L.u_trail,S.viz.trail);
+  if(L.u_trail) gl.uniform1f(L.u_trail,trailAmt);
   if(L.u_punch) gl.uniform1f(L.u_punch,punch);
   if(tool==='tunnel'){
     const tn=S.viz.tunnel;
@@ -4245,23 +5546,262 @@ function renderViz(){
     gl.uniform3f(L.u_pal2,st[2][0],st[2][1],st[2][2]);
     gl.uniform3f(L.u_pal3,st[3][0],st[3][1],st[3][2]);
   }
+  if(tool==='plasma'){
+    const o=S.viz.plasma;
+    if(L.u_plScale) gl.uniform1f(L.u_plScale,o.scale);
+    if(L.u_plDrift) gl.uniform1f(L.u_plDrift,o.drift);
+    if(L.u_plContrast) gl.uniform1f(L.u_plContrast,o.contrast);
+    if(L.u_plLayers) gl.uniform1f(L.u_plLayers,o.layers);
+    if(L.u_plFlow) gl.uniform1f(L.u_plFlow,o.flow);
+  }
+  if(tool==='laser'){
+    const o=S.viz.laser;
+    if(L.u_lzBeams) gl.uniform1f(L.u_lzBeams,o.beams);
+    if(L.u_lzSweep) gl.uniform1f(L.u_lzSweep,o.sweep);
+    if(L.u_lzWidth) gl.uniform1f(L.u_lzWidth,o.width);
+    if(L.u_lzScatter) gl.uniform1f(L.u_lzScatter,o.scatter);
+    if(L.u_lzBloom) gl.uniform1f(L.u_lzBloom,o.bloom);
+  }
+  if(tool==='scan'){
+    const o=S.viz.scan;
+    if(L.u_scBars) gl.uniform1f(L.u_scBars,o.bars);
+    if(L.u_scScroll) gl.uniform1f(L.u_scScroll,o.scroll);
+    if(L.u_scThick) gl.uniform1f(L.u_scThick,o.thick);
+    if(L.u_scGap) gl.uniform1f(L.u_scGap,o.gap);
+    if(L.u_scGlow) gl.uniform1f(L.u_scGlow,o.glow);
+  }
+  if(tool==='glitch'){
+    const o=S.viz.glitch;
+    if(L.u_glBlocks) gl.uniform1f(L.u_glBlocks,o.blocks);
+    if(L.u_glTear) gl.uniform1f(L.u_glTear,o.tear);
+    if(L.u_glRgb) gl.uniform1f(L.u_glRgb,o.rgb);
+    if(L.u_glNoise) gl.uniform1f(L.u_glNoise,o.noise);
+    if(L.u_glHold) gl.uniform1f(L.u_glHold,o.hold);
+  }
+  if(tool==='field'){
+    const o=S.viz.field;
+    if(L.u_fdDensity) gl.uniform1f(L.u_fdDensity,o.density);
+    if(L.u_fdTwinkle) gl.uniform1f(L.u_fdTwinkle,o.twinkle);
+    if(L.u_fdDepth) gl.uniform1f(L.u_fdDepth,o.depth);
+    if(L.u_fdDrift) gl.uniform1f(L.u_fdDrift,o.drift);
+    if(L.u_fdHit) gl.uniform1f(L.u_fdHit,o.hit);
+  }
+  if(tool==='blob'){
+    const o=S.viz.blob;
+    if(L.u_blCount) gl.uniform1f(L.u_blCount,o.count);
+    if(L.u_blSize) gl.uniform1f(L.u_blSize,o.size);
+    if(L.u_blMerge) gl.uniform1f(L.u_blMerge,o.merge);
+    if(L.u_blWobble) gl.uniform1f(L.u_blWobble,o.wobble);
+    if(L.u_blSoft) gl.uniform1f(L.u_blSoft,o.soft);
+  }
+  if(tool==='smoke'){
+    const o=S.viz.smoke;
+    if(L.u_smDensity) gl.uniform1f(L.u_smDensity,o.density);
+    if(L.u_smCurl) gl.uniform1f(L.u_smCurl,o.curl);
+    if(L.u_smRise) gl.uniform1f(L.u_smRise,o.rise);
+    if(L.u_smSoft) gl.uniform1f(L.u_smSoft,o.soft);
+    if(L.u_smGrain) gl.uniform1f(L.u_smGrain,o.grain);
+  }
+  if(tool==='water'){
+    const o=S.viz.water;
+    if(L.u_waWaves) gl.uniform1f(L.u_waWaves,o.waves);
+    if(L.u_waRefract) gl.uniform1f(L.u_waRefract,o.refract);
+    if(L.u_waDepth) gl.uniform1f(L.u_waDepth,o.depth);
+    if(L.u_waChop) gl.uniform1f(L.u_waChop,o.chop);
+    if(L.u_waShine) gl.uniform1f(L.u_waShine,o.shine);
+  }
+  if(tool==='aurora'){
+    const o=S.viz.aurora;
+    if(L.u_auBands) gl.uniform1f(L.u_auBands,o.bands);
+    if(L.u_auWarp) gl.uniform1f(L.u_auWarp,o.warp);
+    if(L.u_auFade) gl.uniform1f(L.u_auFade,o.fade);
+    if(L.u_auSpark) gl.uniform1f(L.u_auSpark,o.spark);
+    if(L.u_auDrift) gl.uniform1f(L.u_auDrift,o.drift);
+  }
+  if(tool==='dust'){
+    const o=S.viz.dust;
+    if(L.u_duCount) gl.uniform1f(L.u_duCount,o.count);
+    if(L.u_duSize) gl.uniform1f(L.u_duSize,o.size);
+    if(L.u_duSpark) gl.uniform1f(L.u_duSpark,o.spark);
+    if(L.u_duDrift) gl.uniform1f(L.u_duDrift,o.drift);
+    if(L.u_duTrail) gl.uniform1f(L.u_duTrail,o.trail);
+  }
+  if(tool==='lattice'){
+    const o=S.viz.lattice;
+    if(L.u_laCells) gl.uniform1f(L.u_laCells,o.cells);
+    if(L.u_laPersp) gl.uniform1f(L.u_laPersp,o.persp);
+    if(L.u_laSpin) gl.uniform1f(L.u_laSpin,o.spin);
+    if(L.u_laThick) gl.uniform1f(L.u_laThick,o.thick);
+    if(L.u_laFade) gl.uniform1f(L.u_laFade,o.fade);
+  }
+  if(tool==='voronoi'){
+    const o=S.viz.voronoi;
+    if(L.u_voCells) gl.uniform1f(L.u_voCells,o.cells);
+    if(L.u_voEdge) gl.uniform1f(L.u_voEdge,o.edge);
+    if(L.u_voAnim) gl.uniform1f(L.u_voAnim,o.animate);
+    if(L.u_voJitter) gl.uniform1f(L.u_voJitter,o.jitter);
+    if(L.u_voFill) gl.uniform1f(L.u_voFill,o.fill);
+  }
+  if(tool==='stars'){
+    const o=S.viz.stars;
+    if(L.u_stCount) gl.uniform1f(L.u_stCount,o.count);
+    if(L.u_stZoom) gl.uniform1f(L.u_stZoom,o.zoom);
+    if(L.u_stStreak) gl.uniform1f(L.u_stStreak,o.streak);
+    if(L.u_stTwinkle) gl.uniform1f(L.u_stTwinkle,o.twinkle);
+    if(L.u_stFog) gl.uniform1f(L.u_stFog,o.fog);
+  }
+  if(tool==='ribbon'){
+    const o=S.viz.ribbon;
+    if(L.u_riCount) gl.uniform1f(L.u_riCount,o.count);
+    if(L.u_riWidth) gl.uniform1f(L.u_riWidth,o.width);
+    if(L.u_riTwist) gl.uniform1f(L.u_riTwist,o.twist);
+    if(L.u_riWave) gl.uniform1f(L.u_riWave,o.wave);
+    if(L.u_riGlow) gl.uniform1f(L.u_riGlow,o.glow);
+  }
+  if(tool==='hex'){
+    const o=S.viz.hex;
+    if(L.u_hxSize) gl.uniform1f(L.u_hxSize,o.size);
+    if(L.u_hxThick) gl.uniform1f(L.u_hxThick,o.thick);
+    if(L.u_hxPulse) gl.uniform1f(L.u_hxPulse,o.pulse);
+    if(L.u_hxWarp) gl.uniform1f(L.u_hxWarp,o.warp);
+    if(L.u_hxGlow) gl.uniform1f(L.u_hxGlow,o.glow);
+  }
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
-  // feedback copy
+}
+function vizCopyToPrev(){
+  const gl=VIZ.gl;
+  const canvas=gl.canvas;
   gl.bindTexture(gl.TEXTURE_2D,VIZ.prevTex);
   gl.copyTexImage2D(gl.TEXTURE_2D,0,gl.RGBA,0,0,canvas.width,canvas.height,0);
   VIZ.prevW=canvas.width; VIZ.prevH=canvas.height;
+}
+function vizCompositeDecks(slots, blendMode, trailAmt, punch){
+  const gl=VIZ.gl;
+  const prog=VIZ.prog.comp;
+  const L=VIZ.locs.comp;
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
+  if(L.a_pos>=0){
+    gl.enableVertexAttribArray(L.a_pos);
+    gl.vertexAttribPointer(L.a_pos,2,gl.FLOAT,false,0,0);
+  }
+  const texUnits=[gl.TEXTURE0,gl.TEXTURE1,gl.TEXTURE2,gl.TEXTURE3];
+  for(let i=0;i<4;i++){
+    gl.activeTexture(texUnits[i]);
+    gl.bindTexture(gl.TEXTURE_2D, slots[i]?VIZ.deckTex[i]:VIZ.deckTex[0]);
+    const loc=L['u_d'+i]; if(loc) gl.uniform1i(loc,i);
+    const wloc=L['u_w'+i]; if(wloc) gl.uniform1f(wloc, slots[i]?slots[i].w:0);
+  }
+  gl.activeTexture(gl.TEXTURE4);
+  gl.bindTexture(gl.TEXTURE_2D,VIZ.prevTex);
+  if(L.u_prev) gl.uniform1i(L.u_prev,4);
+  gl.activeTexture(gl.TEXTURE5);
+  gl.bindTexture(gl.TEXTURE_2D,VIZ.fftTex);
+  if(L.u_freq) gl.uniform1i(L.u_freq,5);
+  const canvas=gl.canvas;
+  gl.uniform2f(L.u_res,canvas.width,canvas.height);
+  gl.uniform1f(L.u_t,0); gl.uniform1f(L.u_bpm,S.bpm||172);
+  gl.uniform1f(L.u_beat,0); gl.uniform1f(L.u_intensity,1);
+  gl.uniform1f(L.u_hue,0); gl.uniform1f(L.u_speed,0); gl.uniform1f(L.u_playing,0);
+  if(L.u_trail) gl.uniform1f(L.u_trail,trailAmt);
+  if(L.u_punch) gl.uniform1f(L.u_punch,punch);
+  if(L.u_n) gl.uniform1f(L.u_n, slots.filter(Boolean).length);
+  if(L.u_blendMode) gl.uniform1f(L.u_blendMode,blendMode);
+  const fl=S.viz.flake||{};
+  if(L.u_split) gl.uniform1f(L.u_split, fl.split||12);
+  if(L.u_kernel) gl.uniform1f(L.u_kernel, VIZ_KERNEL_IDX[fl.kernel]||0);
+  if(L.u_jitter) gl.uniform1f(L.u_jitter, fl.jitter||0);
+  if(L.u_mix) gl.uniform1f(L.u_mix, fl.mix!=null?fl.mix:0.9);
+  if(L.u_soft) gl.uniform1f(L.u_soft, fl.soft||0);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+const VIZ_BLEND_IDX={mix:0,add:1,screen:2,diff:3,flake:4};
+function vizActiveDeckList(){
+  const decks=S.viz.decks||[];
+  const master=clamp01(S.viz.intensity,0.7);
+  const out=[];
+  for(let i=0;i<4;i++){
+    const d=decks[i]; if(!d)continue;
+    const tool=d.tool && d.tool in VIZ.prog && d.tool!=='comp'?d.tool:'';
+    const inten=clamp01(d.intensity,0);
+    if(!tool||inten<=0.02)continue;
+    out.push({i, tool, w:inten*master, intensity:inten*master});
+  }
+  return out;
+}
+function renderViz(){
+  if(!isVizVisible())return;
+  if(!VIZ.ready&&!initViz())return;
+  if(VIZ.reduced&&!S.playing)return;
+  vizResize();
+  const gl=VIZ.gl;
+  uploadFFT();
+  const canvas=gl.canvas;
+  vizEnsurePrevSize(canvas.width, canvas.height);
+  const t=(performance.now()/1000)-VIZ.t0;
+  const beat=vizBeatPhase(t);
+  const punch=vizPunchLevel(t,beat)*clamp01(S.viz.flash,0.2);
+  const trail=S.viz.trail;
+  const active=vizActiveDeckList();
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  gl.viewport(0,0,canvas.width,canvas.height);
+  if(!active.length){
+    gl.clearColor(0.02,0.025,0.04,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }else if(active.length===1){
+    vizDrawTool(active[0].tool, trail, t, beat, punch, active[0].intensity);
+  }else{
+    vizEnsureLayerSize(canvas.width, canvas.height);
+    const slots=[null,null,null,null];
+    for(let s=0;s<active.length;s++){
+      const a=active[s];
+      gl.bindFramebuffer(gl.FRAMEBUFFER,VIZ.deckFbo[s]);
+      gl.viewport(0,0,canvas.width,canvas.height);
+      vizDrawTool(a.tool, 0, t, beat, punch, a.intensity);
+      slots[s]={w:a.w};
+    }
+    vizCompositeDecks(slots, VIZ_BLEND_IDX[S.viz.blend]||0, trail, punch);
+  }
+  vizCopyToPrev();
 }
 function vizClearPreset(){ if(S.viz) S.viz.preset=''; }
 function syncVizUI(){
   if(!S.viz)S.viz=defaultViz();
   S.viz=normalizeViz(S.viz);
+  const tools=['tunnel','pulse','mirror','flake','plasma','laser','scan','glitch','field','blob','smoke','water','aurora','dust','lattice','voronoi','stars','ribbon','hex'];
   const panel=document.getElementById('vizpanel');
+  const ed=S.viz.editDeck|0;
+  const focusTool=(S.viz.decks[ed]&&S.viz.decks[ed].tool)||'';
   if(panel){
-    panel.classList.remove('tool-tunnel','tool-pulse','tool-mirror','tool-flake');
-    panel.classList.add('tool-'+S.viz.tool);
+    for(const t of tools) panel.classList.remove('show-'+t,'tool-'+t,'show-flake-mix');
+    if(focusTool) panel.classList.add('show-'+focusTool);
+    if(S.viz.blend==='flake') panel.classList.add('show-flake-mix');
   }
-  document.querySelectorAll('#viztools [data-tool]').forEach(b=>{
-    b.classList.toggle('lit',b.dataset.tool===S.viz.tool);
+  document.querySelectorAll('#vizdecks .viz-deck').forEach(card=>{
+    const i=+card.dataset.deck|0;
+    card.classList.toggle('focus', i===ed);
+    const d=S.viz.decks[i]||{tool:'',intensity:0};
+    const nameEl=document.getElementById('vizdecktool'+i);
+    if(nameEl) nameEl.textContent=d.tool?(d.tool[0].toUpperCase()+d.tool.slice(1)):'Off';
+    const sel=card.querySelector('.deck-sel');
+    if(sel) sel.classList.toggle('lit', i===ed);
+    const intEl=document.getElementById('vizdeckint'+i);
+    if(intEl){
+      intEl.value=Math.round((d.intensity||0)*100);
+      const lab=document.getElementById('vizdeckint'+i+'v');
+      if(lab)lab.textContent=String(Math.round((d.intensity||0)*100));
+    }
+  });
+  const editLab=document.getElementById('vizdeckeditlab');
+  if(editLab) editLab.textContent='Deck '+(ed+1)+' · tool';
+  document.querySelectorAll('#vizdecktools [data-tool]').forEach(b=>{
+    const v=b.getAttribute('data-tool')||'';
+    b.classList.toggle('lit', v===(focusTool||''));
+  });
+  document.querySelectorAll('#vizblends [data-blend]').forEach(b=>{
+    b.classList.toggle('lit',b.dataset.blend===S.viz.blend);
   });
   const setR=(id,val,label,fmt)=>{
     const el=document.getElementById(id); if(!el)return;
@@ -4293,6 +5833,81 @@ function syncVizUI(){
   setR('vizfmix',Math.round(S.viz.flake.mix*100),'vizfmixv',v=>String(v));
   setR('vizfsoft',Math.round(S.viz.flake.soft*100),'vizfsoftv',v=>String(v));
   setR('vizfrot',Math.round(S.viz.flake.rotate),'vizfrotv',v=>String(v));
+  setR('vizplasmascale',Math.round(S.viz.plasma.scale*100),'vizplasmascalev',v=>String(v));
+  setR('vizplasmadrift',Math.round(S.viz.plasma.drift*100),'vizplasmadriftv',v=>String(v));
+  setR('vizplasmacontrast',Math.round(S.viz.plasma.contrast*100),'vizplasmacontrastv',v=>String(v));
+  setR('vizplasmalayers',Math.round(S.viz.plasma.layers*100),'vizplasmalayersv',v=>String(v));
+  setR('vizplasmaflow',Math.round(S.viz.plasma.flow*100),'vizplasmaflowv',v=>String(v));
+  setR('vizlaserbeams',Math.round(S.viz.laser.beams*100),'vizlaserbeamsv',v=>String(v));
+  setR('vizlasersweep',Math.round(S.viz.laser.sweep*100),'vizlasersweepv',v=>String(v));
+  setR('vizlaserwidth',Math.round(S.viz.laser.width*100),'vizlaserwidthv',v=>String(v));
+  setR('vizlaserscatter',Math.round(S.viz.laser.scatter*100),'vizlaserscatterv',v=>String(v));
+  setR('vizlaserbloom',Math.round(S.viz.laser.bloom*100),'vizlaserbloomv',v=>String(v));
+  setR('vizscanbars',Math.round(S.viz.scan.bars*100),'vizscanbarsv',v=>String(v));
+  setR('vizscanscroll',Math.round(S.viz.scan.scroll*100),'vizscanscrollv',v=>String(v));
+  setR('vizscanthick',Math.round(S.viz.scan.thick*100),'vizscanthickv',v=>String(v));
+  setR('vizscangap',Math.round(S.viz.scan.gap*100),'vizscangapv',v=>String(v));
+  setR('vizscanglow',Math.round(S.viz.scan.glow*100),'vizscanglowv',v=>String(v));
+  setR('vizglitchblocks',Math.round(S.viz.glitch.blocks*100),'vizglitchblocksv',v=>String(v));
+  setR('vizglitchtear',Math.round(S.viz.glitch.tear*100),'vizglitchtearv',v=>String(v));
+  setR('vizglitchrgb',Math.round(S.viz.glitch.rgb*100),'vizglitchrgbv',v=>String(v));
+  setR('vizglitchnoise',Math.round(S.viz.glitch.noise*100),'vizglitchnoisev',v=>String(v));
+  setR('vizglitchhold',Math.round(S.viz.glitch.hold*100),'vizglitchholdv',v=>String(v));
+  setR('vizfielddensity',Math.round(S.viz.field.density*100),'vizfielddensityv',v=>String(v));
+  setR('vizfieldtwinkle',Math.round(S.viz.field.twinkle*100),'vizfieldtwinklev',v=>String(v));
+  setR('vizfielddepth',Math.round(S.viz.field.depth*100),'vizfielddepthv',v=>String(v));
+  setR('vizfielddrift',Math.round(S.viz.field.drift*100),'vizfielddriftv',v=>String(v));
+  setR('vizfieldhit',Math.round(S.viz.field.hit*100),'vizfieldhitv',v=>String(v));
+  setR('vizblobcount',Math.round(S.viz.blob.count*100),'vizblobcountv',v=>String(v));
+  setR('vizblobsize',Math.round(S.viz.blob.size*100),'vizblobsizev',v=>String(v));
+  setR('vizblobmerge',Math.round(S.viz.blob.merge*100),'vizblobmergev',v=>String(v));
+  setR('vizblobwobble',Math.round(S.viz.blob.wobble*100),'vizblobwobblev',v=>String(v));
+  setR('vizblobsoft',Math.round(S.viz.blob.soft*100),'vizblobsoftv',v=>String(v));
+  setR('vizsmokedensity',Math.round(S.viz.smoke.density*100),'vizsmokedensityv',v=>String(v));
+  setR('vizsmokecurl',Math.round(S.viz.smoke.curl*100),'vizsmokecurlv',v=>String(v));
+  setR('vizsmokerise',Math.round(S.viz.smoke.rise*100),'vizsmokerisev',v=>String(v));
+  setR('vizsmokesoft',Math.round(S.viz.smoke.soft*100),'vizsmokesoftv',v=>String(v));
+  setR('vizsmokegrain',Math.round(S.viz.smoke.grain*100),'vizsmokegrainv',v=>String(v));
+  setR('vizwaterwaves',Math.round(S.viz.water.waves*100),'vizwaterwavesv',v=>String(v));
+  setR('vizwaterrefract',Math.round(S.viz.water.refract*100),'vizwaterrefractv',v=>String(v));
+  setR('vizwaterdepth',Math.round(S.viz.water.depth*100),'vizwaterdepthv',v=>String(v));
+  setR('vizwaterchop',Math.round(S.viz.water.chop*100),'vizwaterchopv',v=>String(v));
+  setR('vizwatershine',Math.round(S.viz.water.shine*100),'vizwatershinev',v=>String(v));
+  setR('vizaurorabands',Math.round(S.viz.aurora.bands*100),'vizaurorabandsv',v=>String(v));
+  setR('vizaurorawarp',Math.round(S.viz.aurora.warp*100),'vizaurorawarpv',v=>String(v));
+  setR('vizaurorafade',Math.round(S.viz.aurora.fade*100),'vizaurorafadev',v=>String(v));
+  setR('vizauroraspark',Math.round(S.viz.aurora.spark*100),'vizaurorasparkv',v=>String(v));
+  setR('vizauroradrift',Math.round(S.viz.aurora.drift*100),'vizauroradriftv',v=>String(v));
+  setR('vizdustcount',Math.round(S.viz.dust.count*100),'vizdustcountv',v=>String(v));
+  setR('vizdustsize',Math.round(S.viz.dust.size*100),'vizdustsizev',v=>String(v));
+  setR('vizdustspark',Math.round(S.viz.dust.spark*100),'vizdustsparkv',v=>String(v));
+  setR('vizdustdrift',Math.round(S.viz.dust.drift*100),'vizdustdriftv',v=>String(v));
+  setR('vizdusttrail',Math.round(S.viz.dust.trail*100),'vizdusttrailv',v=>String(v));
+  setR('vizlatticecells',Math.round(S.viz.lattice.cells*100),'vizlatticecellsv',v=>String(v));
+  setR('vizlatticepersp',Math.round(S.viz.lattice.persp*100),'vizlatticeperspv',v=>String(v));
+  setR('vizlatticespin',Math.round(S.viz.lattice.spin*100),'vizlatticespinv',v=>String(v));
+  setR('vizlatticethick',Math.round(S.viz.lattice.thick*100),'vizlatticethickv',v=>String(v));
+  setR('vizlatticefade',Math.round(S.viz.lattice.fade*100),'vizlatticefadev',v=>String(v));
+  setR('vizvoronoicells',Math.round(S.viz.voronoi.cells*100),'vizvoronoicellsv',v=>String(v));
+  setR('vizvoronoiedge',Math.round(S.viz.voronoi.edge*100),'vizvoronoiedgev',v=>String(v));
+  setR('vizvoronoianimate',Math.round(S.viz.voronoi.animate*100),'vizvoronoianimatev',v=>String(v));
+  setR('vizvoronoijitter',Math.round(S.viz.voronoi.jitter*100),'vizvoronoijitterv',v=>String(v));
+  setR('vizvoronoifill',Math.round(S.viz.voronoi.fill*100),'vizvoronoifillv',v=>String(v));
+  setR('vizstarscount',Math.round(S.viz.stars.count*100),'vizstarscountv',v=>String(v));
+  setR('vizstarszoom',Math.round(S.viz.stars.zoom*100),'vizstarszoomv',v=>String(v));
+  setR('vizstarsstreak',Math.round(S.viz.stars.streak*100),'vizstarsstreakv',v=>String(v));
+  setR('vizstarstwinkle',Math.round(S.viz.stars.twinkle*100),'vizstarstwinklev',v=>String(v));
+  setR('vizstarsfog',Math.round(S.viz.stars.fog*100),'vizstarsfogv',v=>String(v));
+  setR('vizribboncount',Math.round(S.viz.ribbon.count*100),'vizribboncountv',v=>String(v));
+  setR('vizribbonwidth',Math.round(S.viz.ribbon.width*100),'vizribbonwidthv',v=>String(v));
+  setR('vizribbontwist',Math.round(S.viz.ribbon.twist*100),'vizribbontwistv',v=>String(v));
+  setR('vizribbonwave',Math.round(S.viz.ribbon.wave*100),'vizribbonwavev',v=>String(v));
+  setR('vizribbonglow',Math.round(S.viz.ribbon.glow*100),'vizribbonglowv',v=>String(v));
+  setR('vizhexsize',Math.round(S.viz.hex.size*100),'vizhexsizev',v=>String(v));
+  setR('vizhexthick',Math.round(S.viz.hex.thick*100),'vizhexthickv',v=>String(v));
+  setR('vizhexpulse',Math.round(S.viz.hex.pulse*100),'vizhexpulsev',v=>String(v));
+  setR('vizhexwarp',Math.round(S.viz.hex.warp*100),'vizhexwarpv',v=>String(v));
+  setR('vizhexglow',Math.round(S.viz.hex.glow*100),'vizhexglowv',v=>String(v));
   const beat=document.getElementById('vizbeat');
   if(beat){beat.classList.toggle('lit',S.viz.beatSync);beat.textContent=S.viz.beatSync?'On':'Off';}
   document.querySelectorAll('#vizkernels [data-k]').forEach(b=>{
@@ -4325,9 +5940,37 @@ function syncVizUI(){
 }
 function wireVizUI(){
   syncVizUI();
-  document.getElementById('viztools')?.addEventListener('click',e=>{
+  document.getElementById('vizdecks')?.addEventListener('click',e=>{
+    const b=e.target.closest('[data-decksel]'); if(!b)return;
+    S.viz.editDeck=+b.dataset.decksel|0;
+    vizClearPreset(); syncVizUI(); syncPush();
+  });
+  document.getElementById('vizdecks')?.addEventListener('input',e=>{
+    const el=e.target.closest('[data-deckint]'); if(!el)return;
+    const i=+el.dataset.deckint|0;
+    if(!S.viz.decks[i])return;
+    S.viz.decks[i].intensity=+el.value/100;
+    const lab=document.getElementById('vizdeckint'+i+'v'); if(lab)lab.textContent=el.value;
+    // auto-focus + bump tool if intensity raised on empty deck
+    if(S.viz.decks[i].intensity>0.02 && !S.viz.decks[i].tool){
+      S.viz.editDeck=i;
+    }
+    vizClearPreset(); syncPush();
+  });
+  document.getElementById('vizdecktools')?.addEventListener('click',e=>{
     const b=e.target.closest('[data-tool]'); if(!b)return;
-    S.viz.tool=b.dataset.tool; vizClearPreset(); syncVizUI(); syncPush();
+    const ed=S.viz.editDeck|0;
+    const v=b.getAttribute('data-tool')||'';
+    if(!S.viz.decks[ed]) S.viz.decks[ed]={tool:'',intensity:0};
+    S.viz.decks[ed].tool=v;
+    if(v && S.viz.decks[ed].intensity<0.05) S.viz.decks[ed].intensity=0.7;
+    if(!v) S.viz.decks[ed].intensity=0;
+    S.viz.tool=v||S.viz.decks.find(d=>d.tool)?.tool||'tunnel';
+    vizClearPreset(); syncVizUI(); syncPush();
+  });
+  document.getElementById('vizblends')?.addEventListener('click',e=>{
+    const b=e.target.closest('[data-blend]'); if(!b)return;
+    S.viz.blend=b.dataset.blend; vizClearPreset(); syncVizUI(); syncPush();
   });
   document.getElementById('vizpresets')?.addEventListener('click',e=>{
     const b=e.target.closest('[data-preset]'); if(!b)return;
@@ -4374,6 +6017,81 @@ function wireVizUI(){
   bind01('vizmthick','vizmthickv',v=>S.viz.mirror.thick=v);
   bind01('vizfmix','vizfmixv',v=>S.viz.flake.mix=v);
   bind01('vizfsoft','vizfsoftv',v=>S.viz.flake.soft=v);
+  bind01('vizplasmascale','vizplasmascalev',v=>S.viz.plasma.scale=v);
+  bind01('vizplasmadrift','vizplasmadriftv',v=>S.viz.plasma.drift=v);
+  bind01('vizplasmacontrast','vizplasmacontrastv',v=>S.viz.plasma.contrast=v);
+  bind01('vizplasmalayers','vizplasmalayersv',v=>S.viz.plasma.layers=v);
+  bind01('vizplasmaflow','vizplasmaflowv',v=>S.viz.plasma.flow=v);
+  bind01('vizlaserbeams','vizlaserbeamsv',v=>S.viz.laser.beams=v);
+  bind01('vizlasersweep','vizlasersweepv',v=>S.viz.laser.sweep=v);
+  bind01('vizlaserwidth','vizlaserwidthv',v=>S.viz.laser.width=v);
+  bind01('vizlaserscatter','vizlaserscatterv',v=>S.viz.laser.scatter=v);
+  bind01('vizlaserbloom','vizlaserbloomv',v=>S.viz.laser.bloom=v);
+  bind01('vizscanbars','vizscanbarsv',v=>S.viz.scan.bars=v);
+  bind01('vizscanscroll','vizscanscrollv',v=>S.viz.scan.scroll=v);
+  bind01('vizscanthick','vizscanthickv',v=>S.viz.scan.thick=v);
+  bind01('vizscangap','vizscangapv',v=>S.viz.scan.gap=v);
+  bind01('vizscanglow','vizscanglowv',v=>S.viz.scan.glow=v);
+  bind01('vizglitchblocks','vizglitchblocksv',v=>S.viz.glitch.blocks=v);
+  bind01('vizglitchtear','vizglitchtearv',v=>S.viz.glitch.tear=v);
+  bind01('vizglitchrgb','vizglitchrgbv',v=>S.viz.glitch.rgb=v);
+  bind01('vizglitchnoise','vizglitchnoisev',v=>S.viz.glitch.noise=v);
+  bind01('vizglitchhold','vizglitchholdv',v=>S.viz.glitch.hold=v);
+  bind01('vizfielddensity','vizfielddensityv',v=>S.viz.field.density=v);
+  bind01('vizfieldtwinkle','vizfieldtwinklev',v=>S.viz.field.twinkle=v);
+  bind01('vizfielddepth','vizfielddepthv',v=>S.viz.field.depth=v);
+  bind01('vizfielddrift','vizfielddriftv',v=>S.viz.field.drift=v);
+  bind01('vizfieldhit','vizfieldhitv',v=>S.viz.field.hit=v);
+  bind01('vizblobcount','vizblobcountv',v=>S.viz.blob.count=v);
+  bind01('vizblobsize','vizblobsizev',v=>S.viz.blob.size=v);
+  bind01('vizblobmerge','vizblobmergev',v=>S.viz.blob.merge=v);
+  bind01('vizblobwobble','vizblobwobblev',v=>S.viz.blob.wobble=v);
+  bind01('vizblobsoft','vizblobsoftv',v=>S.viz.blob.soft=v);
+  bind01('vizsmokedensity','vizsmokedensityv',v=>S.viz.smoke.density=v);
+  bind01('vizsmokecurl','vizsmokecurlv',v=>S.viz.smoke.curl=v);
+  bind01('vizsmokerise','vizsmokerisev',v=>S.viz.smoke.rise=v);
+  bind01('vizsmokesoft','vizsmokesoftv',v=>S.viz.smoke.soft=v);
+  bind01('vizsmokegrain','vizsmokegrainv',v=>S.viz.smoke.grain=v);
+  bind01('vizwaterwaves','vizwaterwavesv',v=>S.viz.water.waves=v);
+  bind01('vizwaterrefract','vizwaterrefractv',v=>S.viz.water.refract=v);
+  bind01('vizwaterdepth','vizwaterdepthv',v=>S.viz.water.depth=v);
+  bind01('vizwaterchop','vizwaterchopv',v=>S.viz.water.chop=v);
+  bind01('vizwatershine','vizwatershinev',v=>S.viz.water.shine=v);
+  bind01('vizaurorabands','vizaurorabandsv',v=>S.viz.aurora.bands=v);
+  bind01('vizaurorawarp','vizaurorawarpv',v=>S.viz.aurora.warp=v);
+  bind01('vizaurorafade','vizaurorafadev',v=>S.viz.aurora.fade=v);
+  bind01('vizauroraspark','vizaurorasparkv',v=>S.viz.aurora.spark=v);
+  bind01('vizauroradrift','vizauroradriftv',v=>S.viz.aurora.drift=v);
+  bind01('vizdustcount','vizdustcountv',v=>S.viz.dust.count=v);
+  bind01('vizdustsize','vizdustsizev',v=>S.viz.dust.size=v);
+  bind01('vizdustspark','vizdustsparkv',v=>S.viz.dust.spark=v);
+  bind01('vizdustdrift','vizdustdriftv',v=>S.viz.dust.drift=v);
+  bind01('vizdusttrail','vizdusttrailv',v=>S.viz.dust.trail=v);
+  bind01('vizlatticecells','vizlatticecellsv',v=>S.viz.lattice.cells=v);
+  bind01('vizlatticepersp','vizlatticeperspv',v=>S.viz.lattice.persp=v);
+  bind01('vizlatticespin','vizlatticespinv',v=>S.viz.lattice.spin=v);
+  bind01('vizlatticethick','vizlatticethickv',v=>S.viz.lattice.thick=v);
+  bind01('vizlatticefade','vizlatticefadev',v=>S.viz.lattice.fade=v);
+  bind01('vizvoronoicells','vizvoronoicellsv',v=>S.viz.voronoi.cells=v);
+  bind01('vizvoronoiedge','vizvoronoiedgev',v=>S.viz.voronoi.edge=v);
+  bind01('vizvoronoianimate','vizvoronoianimatev',v=>S.viz.voronoi.animate=v);
+  bind01('vizvoronoijitter','vizvoronoijitterv',v=>S.viz.voronoi.jitter=v);
+  bind01('vizvoronoifill','vizvoronoifillv',v=>S.viz.voronoi.fill=v);
+  bind01('vizstarscount','vizstarscountv',v=>S.viz.stars.count=v);
+  bind01('vizstarszoom','vizstarszoomv',v=>S.viz.stars.zoom=v);
+  bind01('vizstarsstreak','vizstarsstreakv',v=>S.viz.stars.streak=v);
+  bind01('vizstarstwinkle','vizstarstwinklev',v=>S.viz.stars.twinkle=v);
+  bind01('vizstarsfog','vizstarsfogv',v=>S.viz.stars.fog=v);
+  bind01('vizribboncount','vizribboncountv',v=>S.viz.ribbon.count=v);
+  bind01('vizribbonwidth','vizribbonwidthv',v=>S.viz.ribbon.width=v);
+  bind01('vizribbontwist','vizribbontwistv',v=>S.viz.ribbon.twist=v);
+  bind01('vizribbonwave','vizribbonwavev',v=>S.viz.ribbon.wave=v);
+  bind01('vizribbonglow','vizribbonglowv',v=>S.viz.ribbon.glow=v);
+  bind01('vizhexsize','vizhexsizev',v=>S.viz.hex.size=v);
+  bind01('vizhexthick','vizhexthickv',v=>S.viz.hex.thick=v);
+  bind01('vizhexpulse','vizhexpulsev',v=>S.viz.hex.pulse=v);
+  bind01('vizhexwarp','vizhexwarpv',v=>S.viz.hex.warp=v);
+  bind01('vizhexglow','vizhexglowv',v=>S.viz.hex.glow=v);
   document.getElementById('vizmsegs').oninput=e=>{
     S.viz.mirror.segs=+e.target.value|0; vizClearPreset();
     document.getElementById('vizmsegsv').textContent=e.target.value; syncPush();
