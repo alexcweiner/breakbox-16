@@ -336,25 +336,151 @@ body.role-ctrl #file{pointer-events:none;opacity:.4;}
 canvas#viz{display:block;width:100%;height:min(52vh,520px);background:#050608;}
 .viz-strip{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;
   padding:10px 12px 12px;border-top:1px solid var(--line2);background:var(--panel2);}
-.viz-decks{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:8px;width:100%;flex-basis:100%;}
+.viz-monitors{position:absolute;inset:0;pointer-events:none;display:flex;z-index:2;}
+.viz-monitors .mon{flex:1;position:relative;border-right:1px solid rgba(255,176,0,.18);}
+.viz-monitors .mon:last-child{border-right:none;}
+.viz-monitors .mon-tag{
+  position:absolute;top:8px;left:10px;font-family:'VT323',monospace;font-size:1.05rem;
+  letter-spacing:.18em;padding:2px 8px;border-radius:3px;background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.12);}
+.viz-monitors .mon.pvw .mon-tag{color:var(--synth);border-color:rgba(64,214,189,.35);}
+.viz-monitors .mon.pgm .mon-tag{color:var(--amber);border-color:rgba(255,176,0,.4);}
+.viz-monitors .mon-sub{
+  position:absolute;bottom:8px;left:10px;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);background:rgba(0,0,0,.45);padding:2px 7px;border-radius:3px;}
+body:not(.viz-dual) .viz-monitors .mon.pvw{display:none;}
+body:not(.viz-dual) .viz-monitors .mon.pgm{border:none;}
+body.viz-dual canvas#viz{/* program+preview split drawn in GL */}
+.viz-decks{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:8px;width:100%;flex-basis:100%;}
 @media (max-width:900px){.viz-decks{grid-template-columns:1fr 1fr;}}
 .viz-deck{
-  background:var(--cell);border:1px solid var(--line2);border-radius:6px;padding:8px 9px;
-  display:flex;flex-direction:column;gap:6px;min-width:0;}
-.viz-deck.focus{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,176,0,.35);}
-.viz-deck .deck-top{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+  background:linear-gradient(180deg,#22252c 0%,var(--cell) 100%);
+  border:1px solid var(--line2);border-radius:6px;padding:8px 9px;
+  display:flex;flex-direction:column;gap:6px;min-width:0;
+  transition:border-color .12s,box-shadow .12s,opacity .12s;}
+.viz-deck.focus{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,176,0,.35),0 0 18px rgba(255,176,0,.08);}
+.viz-deck.muted{opacity:.48;}
+.viz-deck.soloed{border-color:#ffe14d;box-shadow:0 0 0 1px rgba(255,225,77,.3);}
+.viz-deck.route-a{box-shadow:inset 3px 0 0 var(--synth);}
+.viz-deck.route-b{box-shadow:inset 3px 0 0 var(--hot);}
+.viz-deck.route-both{box-shadow:inset 3px 0 0 var(--amber);}
+.viz-deck.focus.route-a{box-shadow:inset 3px 0 0 var(--synth),0 0 0 1px rgba(255,176,0,.35);}
+.viz-deck.focus.route-b{box-shadow:inset 3px 0 0 var(--hot),0 0 0 1px rgba(255,176,0,.35);}
+.viz-deck.focus.route-both{box-shadow:inset 3px 0 0 var(--amber),0 0 0 1px rgba(255,176,0,.35);}
+.viz-deck .deck-top{display:flex;align-items:center;gap:5px;}
 .viz-deck .deck-sel{
-  padding:10px 12px;min-height:42px;font-size:.78rem;letter-spacing:.1em;flex:1;}
+  padding:8px 10px;min-height:36px;font-size:.72rem;letter-spacing:.1em;flex:1;}
 .viz-deck.focus .deck-sel{background:#33271a;border-color:var(--amber);color:var(--amber);
   box-shadow:inset 0 -2px 0 var(--amber);}
+.viz-deck .deck-msc{display:flex;gap:3px;flex-shrink:0;}
+.viz-deck .deck-msc button{
+  min-width:28px;min-height:28px;padding:0 4px;font-size:.62rem;letter-spacing:.04em;}
+.viz-deck .deck-msc button.mute.lit{background:#3a1515;border-color:#ff5c5c;color:#ff5c5c;
+  box-shadow:inset 0 -2px 0 #ff5c5c;}
+.viz-deck .deck-msc button.solo.lit{background:#33301a;border-color:#ffe14d;color:#ffe14d;
+  box-shadow:inset 0 -2px 0 #ffe14d;}
+.viz-deck .deck-msc button.cue.lit{background:#0f2d26;border-color:var(--synth);color:var(--synth);
+  box-shadow:inset 0 -2px 0 var(--synth),0 0 8px rgba(64,214,189,.25);}
 .viz-deck .deck-tool{
   font-family:'VT323',monospace;font-size:1.05rem;color:var(--dim);letter-spacing:.04em;
   text-transform:uppercase;min-height:1.2em;}
 .viz-deck.focus .deck-tool{color:var(--lcd);}
-.viz-deck .deck-int{width:100%;}
+.viz-deck .deck-prevwrap{
+  position:relative;width:100%;aspect-ratio:16/9;border-radius:4px;overflow:hidden;
+  background:#050608;border:1px solid var(--line2);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.35);}
+.viz-deck.route-a .deck-prevwrap{border-color:rgba(64,214,189,.35);}
+.viz-deck.route-b .deck-prevwrap{border-color:rgba(255,61,129,.35);}
+.viz-deck.route-both .deck-prevwrap{border-color:rgba(255,176,0,.4);}
+.viz-deck.off .deck-prevwrap{opacity:.35;}
+.viz-deck.muted .deck-prevwrap{opacity:.4;filter:grayscale(.35);}
+.viz-deck .deck-prev{display:block;width:100%;height:100%;background:#050608;pointer-events:none;}
+.viz-deck .deck-prevwrap{cursor:pointer;}
+.viz-deck .deck-prevwrap:hover{box-shadow:0 0 0 1px var(--synth);}
+.viz-deck.cueing .deck-prevwrap{box-shadow:0 0 0 1px var(--synth),0 0 12px rgba(64,214,189,.25);}
+.viz-deck .deck-body{display:flex;gap:8px;align-items:stretch;min-height:100px;}
+.viz-deck .deck-side{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;}
+.viz-deck .deck-route{display:flex;gap:3px;}
+.viz-deck .deck-route button{flex:1;padding:6px 0;font-size:.62rem;min-height:30px;letter-spacing:.08em;}
+.viz-deck .deck-route button[data-route=a].lit{background:#0f2d26;border-color:var(--synth);color:var(--synth);
+  box-shadow:inset 0 -2px 0 var(--synth);}
+.viz-deck .deck-route button[data-route=b].lit{background:#33131f;border-color:var(--hot);color:var(--hot);
+  box-shadow:inset 0 -2px 0 var(--hot);}
+.viz-deck .deck-route button[data-route=both].lit{background:#33271a;border-color:var(--amber);color:var(--amber);
+  box-shadow:inset 0 -2px 0 var(--amber);}
+.viz-deck .deck-fader{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  gap:4px;width:42px;flex-shrink:0;}
+.viz-deck .deck-fader .mini{margin:0;font-size:.58rem;letter-spacing:.08em;}
+.viz-deck .deck-int{
+  writing-mode:vertical-lr;direction:rtl;
+  width:36px;height:110px;min-width:36px;padding:0;margin:0;
+  --thumb:var(--amber);}
+.viz-deck.route-a .deck-int{--thumb:var(--synth);}
+.viz-deck.route-b .deck-int{--thumb:var(--hot);}
 .viz-deck-tools{display:flex;flex-direction:column;gap:4px;width:100%;flex-basis:100%;}
 .viz-layers{display:flex;flex-direction:column;gap:10px;width:100%;flex-basis:100%;}
 .viz-layers .layer-mixrow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+.viz-xfade{
+  width:100%;flex-basis:100%;display:grid;
+  grid-template-columns:auto auto 1fr auto auto auto;gap:8px;align-items:center;
+  padding:10px 12px;border:1px solid var(--line2);border-radius:6px;
+  background:linear-gradient(180deg,#1e2128 0%,#16181d 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);}
+.viz-xfade .xf-lab{
+  font-family:'VT323',monospace;font-size:1.35rem;letter-spacing:.12em;
+  min-width:1.2em;text-align:center;line-height:1;}
+.viz-xfade .xf-lab.a{color:var(--synth);text-shadow:0 0 12px rgba(64,214,189,.35);}
+.viz-xfade .xf-lab.b{color:var(--hot);text-shadow:0 0 12px rgba(255,61,129,.35);}
+.viz-xfade .xf-track{position:relative;height:44px;display:flex;align-items:center;}
+.viz-xfade .xf-track::before{
+  content:'';position:absolute;left:0;right:0;height:14px;border-radius:7px;
+  background:
+    linear-gradient(90deg,
+      rgba(64,214,189,.55) 0%,
+      rgba(64,214,189,.18) 42%,
+      rgba(40,40,48,.9) 50%,
+      rgba(255,61,129,.18) 58%,
+      rgba(255,61,129,.55) 100%);
+  border:1px solid var(--line);box-shadow:inset 0 1px 3px rgba(0,0,0,.65);}
+.viz-xfade .xf-track::after{
+  content:'';position:absolute;left:50%;top:50%;width:2px;height:22px;
+  transform:translate(-50%,-50%);background:rgba(255,255,255,.2);border-radius:1px;pointer-events:none;}
+.viz-xfade #vizxfade{
+  position:relative;z-index:1;width:100%;height:44px;margin:0;
+  --thumb:#e8e0c8;}
+.viz-xfade #vizxfade::-webkit-slider-runnable-track{background:transparent;border:none;box-shadow:none;height:14px;}
+.viz-xfade #vizxfade::-moz-range-track{background:transparent;border:none;box-shadow:none;height:14px;}
+.viz-xfade #vizxfade::-webkit-slider-thumb{
+  width:22px;height:36px;margin-top:-11px;border-radius:5px;
+  background:
+    linear-gradient(90deg,#2a2a30 0%,#f2ead2 18%,#fff 50%,#f2ead2 82%,#2a2a30 100%);
+  border:1px solid #0c0c0e;
+  box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.35);
+  cursor:grab;}
+.viz-xfade #vizxfade::-moz-range-thumb{
+  width:22px;height:36px;border-radius:5px;
+  background:
+    linear-gradient(90deg,#2a2a30 0%,#f2ead2 18%,#fff 50%,#f2ead2 82%,#2a2a30 100%);
+  border:1px solid #0c0c0e;
+  box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08);}
+.viz-xfade #vizxfadecenter{
+  min-width:40px;min-height:40px;padding:0;font-size:1rem;border-radius:50%;
+  color:var(--dim);}
+.viz-xfade #vizxfadecenter:hover{color:var(--amber);border-color:var(--amber);}
+.viz-mixmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;width:100%;flex-basis:100%;}
+.viz-mixmeta #vizpreviewbtn.lit{background:#0f2d26;border-color:var(--synth);color:var(--synth);
+  box-shadow:inset 0 -2px 0 var(--synth);}
+.viz-mixmeta #viztakebtn.take-flash{background:#33271a;border-color:var(--amber);color:var(--amber);
+  box-shadow:0 0 12px rgba(255,176,0,.35), inset 0 -2px 0 var(--amber);}
+.viz-mixmeta #vizblackout.lit{background:#3a1515;border-color:#ff5c5c;color:#ff5c5c;
+  box-shadow:inset 0 -2px 0 #ff5c5c,0 0 10px rgba(255,92,92,.25);}
+.viz-mixmeta #vizxfadecurve.lit{background:#33271a;border-color:var(--amber);color:var(--amber);
+  box-shadow:inset 0 -2px 0 var(--amber);}
+.viz-xfade .xf-snap{min-width:36px;min-height:36px;padding:0 8px;font-size:.68rem;letter-spacing:.06em;}
+.viz-mixmeta .xf-readout{
+  font-family:'VT323',monospace;font-size:1.15rem;color:var(--lcd);letter-spacing:.08em;
+  min-width:4.5em;}
 .viz-tools{display:flex;gap:6px;flex-wrap:wrap;}
 .viz-tools button{
   padding:13px 16px;font-size:.82rem;min-height:48px;min-width:78px;
@@ -412,6 +538,7 @@ body.viz-solo [data-panel=visuals]{display:block!important;margin:0;border:none;
 body.viz-solo .viz-panel .panel-head{display:none;}
 body.viz-solo .viz-stage{min-height:100vh;border:none;}
 body.viz-solo canvas#viz{height:100vh;}
+body.viz-solo .viz-monitors{display:none;}
 body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;
   background:rgba(20,21,24,.88);backdrop-filter:blur(8px);border-top:1px solid var(--line);}
 @media (max-width:720px){
@@ -605,45 +732,117 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
   <div class="panel viz-panel show-tunnel" data-panel="visuals" id="vizpanel">
     <div class="panel-head">
       <span class="eyebrow" style="color:var(--hot)">Visuals · live reactive</span><div class="rule"></div>
-      <span class="mini" style="margin:0">tools + knobs · no coding · open view=visuals for projector</span>
+      <span class="mini" style="margin:0">4-ch mixer · mute/solo/cue · A/B xfade · PVW/PGM · view=visuals for projector</span>
     </div>
     <div class="viz-stage">
       <canvas id="viz" width="960" height="540"></canvas>
+      <div class="viz-monitors" id="vizmonitors" aria-hidden="true">
+        <div class="mon pvw"><span class="mon-tag">PVW</span><span class="mon-sub" id="vizpvwlab">Deck 1</span></div>
+        <div class="mon pgm"><span class="mon-tag">PGM</span><span class="mon-sub">Program</span></div>
+      </div>
     </div>
     <div class="viz-strip">
       <div class="viz-layers">
         <div class="viz-decks" id="vizdecks">
-        <div class="viz-deck focus" data-deck="0">
+        <div class="viz-deck focus route-a" data-deck="0">
           <div class="deck-top">
-            <button type="button" class="deck-sel lit" data-decksel="0">Deck 1</button>
+            <button type="button" class="deck-sel lit" data-decksel="0">Ch 1</button>
+            <div class="deck-msc">
+              <button type="button" class="mute" data-deckmute="0" title="Mute">M</button>
+              <button type="button" class="solo" data-decksolo="0" title="Solo">S</button>
+              <button type="button" class="cue" data-deckcue="0" title="Preview in PVW (does not change edit)">C</button>
+            </div>
           </div>
           <div class="deck-tool" id="vizdecktool0">Tunnel</div>
-          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint0v">70</span></label>
-            <input type="range" class="deck-int" id="vizdeckint0" data-deckint="0" min="0" max="100" value="70"></div>
+          <div class="deck-prevwrap"><canvas class="deck-prev" id="vizdeckprev0" width="160" height="90"></canvas></div>
+          <div class="deck-body">
+            <div class="deck-side">
+              <div class="deck-route" data-deckroute="0">
+                <button type="button" data-route="a" class="lit">A</button>
+                <button type="button" data-route="b">B</button>
+                <button type="button" data-route="both">AB</button>
+              </div>
+            </div>
+            <div class="deck-fader">
+              <span class="mini" id="vizdeckint0v">70</span>
+              <input type="range" class="deck-int" id="vizdeckint0" data-deckint="0" min="0" max="100" value="70" orient="vertical" aria-label="Channel 1 level">
+            </div>
+          </div>
         </div>
-        <div class="viz-deck" data-deck="1">
+        <div class="viz-deck route-a off" data-deck="1">
           <div class="deck-top">
-            <button type="button" class="deck-sel" data-decksel="1">Deck 2</button>
+            <button type="button" class="deck-sel" data-decksel="1">Ch 2</button>
+            <div class="deck-msc">
+              <button type="button" class="mute" data-deckmute="1" title="Mute">M</button>
+              <button type="button" class="solo" data-decksolo="1" title="Solo">S</button>
+              <button type="button" class="cue" data-deckcue="1" title="Preview in PVW (does not change edit)">C</button>
+            </div>
           </div>
           <div class="deck-tool" id="vizdecktool1">Off</div>
-          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint1v">0</span></label>
-            <input type="range" class="deck-int" id="vizdeckint1" data-deckint="1" min="0" max="100" value="0"></div>
+          <div class="deck-prevwrap"><canvas class="deck-prev" id="vizdeckprev1" width="160" height="90"></canvas></div>
+          <div class="deck-body">
+            <div class="deck-side">
+              <div class="deck-route" data-deckroute="1">
+                <button type="button" data-route="a" class="lit">A</button>
+                <button type="button" data-route="b">B</button>
+                <button type="button" data-route="both">AB</button>
+              </div>
+            </div>
+            <div class="deck-fader">
+              <span class="mini" id="vizdeckint1v">0</span>
+              <input type="range" class="deck-int" id="vizdeckint1" data-deckint="1" min="0" max="100" value="0" orient="vertical" aria-label="Channel 2 level">
+            </div>
+          </div>
         </div>
-        <div class="viz-deck" data-deck="2">
+        <div class="viz-deck route-b off" data-deck="2">
           <div class="deck-top">
-            <button type="button" class="deck-sel" data-decksel="2">Deck 3</button>
+            <button type="button" class="deck-sel" data-decksel="2">Ch 3</button>
+            <div class="deck-msc">
+              <button type="button" class="mute" data-deckmute="2" title="Mute">M</button>
+              <button type="button" class="solo" data-decksolo="2" title="Solo">S</button>
+              <button type="button" class="cue" data-deckcue="2" title="Preview in PVW (does not change edit)">C</button>
+            </div>
           </div>
           <div class="deck-tool" id="vizdecktool2">Off</div>
-          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint2v">0</span></label>
-            <input type="range" class="deck-int" id="vizdeckint2" data-deckint="2" min="0" max="100" value="0"></div>
+          <div class="deck-prevwrap"><canvas class="deck-prev" id="vizdeckprev2" width="160" height="90"></canvas></div>
+          <div class="deck-body">
+            <div class="deck-side">
+              <div class="deck-route" data-deckroute="2">
+                <button type="button" data-route="a">A</button>
+                <button type="button" data-route="b" class="lit">B</button>
+                <button type="button" data-route="both">AB</button>
+              </div>
+            </div>
+            <div class="deck-fader">
+              <span class="mini" id="vizdeckint2v">0</span>
+              <input type="range" class="deck-int" id="vizdeckint2" data-deckint="2" min="0" max="100" value="0" orient="vertical" aria-label="Channel 3 level">
+            </div>
+          </div>
         </div>
-        <div class="viz-deck" data-deck="3">
+        <div class="viz-deck route-b off" data-deck="3">
           <div class="deck-top">
-            <button type="button" class="deck-sel" data-decksel="3">Deck 4</button>
+            <button type="button" class="deck-sel" data-decksel="3">Ch 4</button>
+            <div class="deck-msc">
+              <button type="button" class="mute" data-deckmute="3" title="Mute">M</button>
+              <button type="button" class="solo" data-decksolo="3" title="Solo">S</button>
+              <button type="button" class="cue" data-deckcue="3" title="Preview in PVW (does not change edit)">C</button>
+            </div>
           </div>
           <div class="deck-tool" id="vizdecktool3">Off</div>
-          <div class="ctl"><label class="mini">Intensity <span id="vizdeckint3v">0</span></label>
-            <input type="range" class="deck-int" id="vizdeckint3" data-deckint="3" min="0" max="100" value="0"></div>
+          <div class="deck-prevwrap"><canvas class="deck-prev" id="vizdeckprev3" width="160" height="90"></canvas></div>
+          <div class="deck-body">
+            <div class="deck-side">
+              <div class="deck-route" data-deckroute="3">
+                <button type="button" data-route="a">A</button>
+                <button type="button" data-route="b" class="lit">B</button>
+                <button type="button" data-route="both">AB</button>
+              </div>
+            </div>
+            <div class="deck-fader">
+              <span class="mini" id="vizdeckint3v">0</span>
+              <input type="range" class="deck-int" id="vizdeckint3" data-deckint="3" min="0" max="100" value="0" orient="vertical" aria-label="Channel 4 level">
+            </div>
+          </div>
         </div>
         </div>
         <div class="viz-deck-tools">
@@ -671,8 +870,25 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
           <button data-tool="hex">Hex</button>
           </div>
         </div>
-        <div class="layer-mixrow">
-          <div class="ctl">
+        <div class="viz-xfade" id="vizxfadewrap">
+          <span class="xf-lab a">A</span>
+          <button type="button" class="xf-snap" id="vizxfadesnapA" title="Snap full A">⟸</button>
+          <div class="xf-track">
+            <input type="range" id="vizxfade" min="0" max="100" value="50" aria-label="Crossfader">
+          </div>
+          <button type="button" class="xf-snap" id="vizxfadesnapB" title="Snap full B">⟹</button>
+          <span class="xf-lab b">B</span>
+          <button type="button" id="vizxfadecenter" title="Center crossfader">●</button>
+        </div>
+        <div class="viz-mixmeta">
+          <button type="button" id="vizpreviewbtn" class="lit" title="Preview / Program split">PVW · PGM</button>
+          <button type="button" id="viztakebtn" title="Take cue to program">Take</button>
+          <button type="button" id="vizblackout" title="Blackout program">Blk</button>
+          <button type="button" id="vizxfadecurve" class="lit" title="Crossfader curve">EQ</button>
+          <button type="button" id="vizswapbtn" title="Swap edit and cue channels">Swap</button>
+          <button type="button" id="vizcopybtn" title="Copy edit channel onto cue">Copy→Cue</button>
+          <span class="xf-readout" id="vizxfadev">A50 · B50</span>
+          <div class="ctl" style="margin:0">
             <label class="mini">Deck blend</label>
             <div class="viz-kernels" id="vizblends">
               <button data-blend="mix" class="lit">Mix</button>
@@ -982,7 +1198,7 @@ body.viz-solo .viz-strip{position:fixed;left:0;right:0;bottom:0;z-index:20;margi
   </div>
 
   <div class="footer">
-    <span>1-0-= / Q–I = fire slices · space = play · motion rec = twist knobs while playing</span>
+    <span>1-0-= / Q–I = slices · space = play · visuals: Shift+1–4 ch · Take/Blk/xfade keys in viz view</span>
     <span>web audio · amen synth default · load any break you own</span>
   </div>
 </div>
@@ -1032,12 +1248,12 @@ function cloneVoice(v){return JSON.parse(JSON.stringify(v));}
 function clamp01(x,d){x=x!=null?+x:d; return Math.max(0,Math.min(1,Number.isFinite(x)?x:d));}
 function defaultViz(){
   return {
-    tool:'tunnel', blend:'mix', editDeck:0,
+    tool:'tunnel', blend:'mix', editDeck:0, cueDeck:0, xfade:.5, xfadeCurve:'eq', preview:true, blackout:false,
     decks:[
-      {tool:'tunnel',intensity:.7},
-      {tool:'',intensity:0},
-      {tool:'',intensity:0},
-      {tool:'',intensity:0},
+      {tool:'tunnel',intensity:.7,mute:false,solo:false,route:'a'},
+      {tool:'',intensity:0,mute:false,solo:false,route:'a'},
+      {tool:'',intensity:0,mute:false,solo:false,route:'b'},
+      {tool:'',intensity:0,mute:false,solo:false,route:'b'},
     ],
     intensity:.7, hue:0, speed:.5, trail:.35, flash:.2, beatSync:true, preset:'',
     tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},
@@ -1090,13 +1306,15 @@ function normalizeViz(v){
   const preset=presets.includes(v.preset)?v.preset:(v.preset?String(v.preset):'');
   const blends=['mix','add','screen','diff','flake'];
   const blend=blends.includes(v.blend)?v.blend:d.blend;
+  const routes=['a','b','both'];
   let decks;
   if(Array.isArray(v.decks)&&v.decks.length){
     decks=[0,1,2,3].map(i=>{
       const src=v.decks[i]&&typeof v.decks[i]==='object'?v.decks[i]:{};
       const dt=(src.tool===''||src.tool==null)?'':(tools.includes(src.tool)?src.tool:'');
       const di=clamp01(src.intensity, i===0?d.decks[0].intensity:0);
-      return {tool:dt, intensity:di};
+      const route=routes.includes(src.route)?src.route:(i<2?'a':'b');
+      return {tool:dt, intensity:di, mute:!!src.mute, solo:!!src.solo, route};
     });
   }else{
     // migrate old tool / toolB / layerMix
@@ -1104,20 +1322,31 @@ function normalizeViz(v){
     const mix=clamp01(v.layerMix,0);
     const inten=clamp01(v.intensity,d.intensity);
     decks=[
-      {tool, intensity:inten},
-      {tool:toolB, intensity:toolB?Math.max(0.35,mix):0},
-      {tool:'', intensity:0},
-      {tool:'', intensity:0},
+      {tool, intensity:inten, mute:false, solo:false, route:'a'},
+      {tool:toolB, intensity:toolB?Math.max(0.35,mix):0, mute:false, solo:false, route:'a'},
+      {tool:'', intensity:0, mute:false, solo:false, route:'b'},
+      {tool:'', intensity:0, mute:false, solo:false, route:'b'},
     ];
   }
   let editDeck=v.editDeck!=null?(v.editDeck|0):0;
   if(editDeck<0||editDeck>3)editDeck=0;
+  let cueDeck=v.cueDeck!=null?(v.cueDeck|0):editDeck;
+  if(cueDeck<0||cueDeck>3)cueDeck=editDeck;
+  const xfade=clamp01(v.xfade,d.xfade!=null?d.xfade:0.5);
+  const preview=v.preview!=null?!!v.preview:(d.preview!==false);
+  const xfadeCurve=(v.xfadeCurve==='cut')?'cut':'eq';
+  const blackout=v.blackout!=null?!!v.blackout:!!d.blackout;
   const focusTool=decks[editDeck].tool||decks[0].tool||tool;
   return {
     tool:focusTool||tool,
     decks,
     blend,
     editDeck,
+    cueDeck,
+    xfade,
+    xfadeCurve,
+    preview,
+    blackout,
     intensity:clamp01(v.intensity,d.intensity),
     hue:((v.hue!=null?+v.hue:d.hue)%360+360)%360,
     speed:clamp01(v.speed,d.speed),
@@ -1281,18 +1510,70 @@ const VIZ_PRESETS={
   laser:{tool:'laser',intensity:0.9,hue:320,speed:0.7,trail:0.25,flash:0.4,beatSync:true,preset:'laser',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.7,sweep:.6,width:.3,scatter:.2,bloom:.7},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.5,edge:.55,animate:.4,jitter:.35,fill:.45},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
   cells:{tool:'voronoi',intensity:0.85,hue:180,speed:0.5,trail:0.35,flash:0.15,beatSync:true,preset:'cells',tunnel:{depth:.55,twist:.35,rings:.5,zoom:.4,fog:.3},pulse:{spread:.5,ripple:.55,grid:.4,glow:.5,spin:.3},mirror:{segs:8,zoom:.45,spin:.4,warp:.35,thick:.45},flake:{split:10,kernel:'brightness',palette:0,source:0,sourceB:1,jitter:.2,mix:.9,soft:.2,rotate:0},plasma:{scale:.45,drift:.4,contrast:.55,layers:.5,flow:.5},laser:{beams:.5,sweep:.45,width:.35,scatter:.25,bloom:.5},scan:{bars:.55,scroll:.4,thick:.4,gap:.35,glow:.5},glitch:{blocks:.5,tear:.45,rgb:.4,noise:.35,hold:.3},field:{density:.55,twinkle:.5,depth:.5,drift:.35,hit:.55},blob:{count:.5,size:.45,merge:.55,wobble:.4,soft:.5},smoke:{density:.55,curl:.5,rise:.45,soft:.55,grain:.3},water:{waves:.5,refract:.45,depth:.5,chop:.35,shine:.55},aurora:{bands:.5,warp:.55,fade:.4,spark:.35,drift:.4},dust:{count:.55,size:.4,spark:.5,drift:.45,trail:.4},lattice:{cells:.5,persp:.55,spin:.35,thick:.4,fade:.45},voronoi:{cells:.6,edge:.7,animate:.55,jitter:.45,fill:.5},stars:{count:.55,zoom:.5,streak:.4,twinkle:.5,fog:.35},ribbon:{count:.5,width:.4,twist:.45,wave:.5,glow:.55},hex:{size:.45,thick:.4,pulse:.5,warp:.3,glow:.5}},
 };
+function vizMkDeck(tool,intensity,route){
+  return {tool:tool||'',intensity:intensity||0,mute:false,solo:false,route:route||'a'};
+}
+/* Four-channel mixer setups per preset — A bus left, B bus right, ready to xfade */
+const VIZ_SETUPS={
+  rave:{blend:'add',xfade:.42,decks:[
+    ['tunnel',.88,'a'],['laser',.55,'a'],['pulse',.5,'b'],['field',.45,'b']]},
+  hypno:{blend:'mix',xfade:.5,decks:[
+    ['mirror',.85,'a'],['aurora',.45,'a'],['tunnel',.4,'b'],['smoke',.35,'b']]},
+  chop:{blend:'flake',xfade:.55,decks:[
+    ['flake',.9,'a'],['glitch',.55,'a'],['scan',.5,'b'],['pulse',.4,'b']]},
+  ice:{blend:'screen',xfade:.48,decks:[
+    ['pulse',.8,'a'],['water',.5,'a'],['aurora',.45,'b'],['stars',.4,'b']]},
+  chaos:{blend:'diff',xfade:.5,decks:[
+    ['glitch',.95,'a'],['laser',.6,'a'],['flake',.55,'b'],['field',.5,'b']]},
+  deep:{blend:'mix',xfade:.4,decks:[
+    ['stars',.75,'a'],['smoke',.45,'a'],['aurora',.4,'b'],['tunnel',.3,'b']]},
+  soft:{blend:'screen',xfade:.5,decks:[
+    ['aurora',.7,'a'],['smoke',.5,'a'],['water',.4,'b'],['blob',.35,'b']]},
+  wire:{blend:'add',xfade:.45,decks:[
+    ['lattice',.85,'a'],['hex',.55,'a'],['scan',.45,'b'],['voronoi',.4,'b']]},
+  acid:{blend:'add',xfade:.5,decks:[
+    ['plasma',.9,'a'],['tunnel',.5,'a'],['laser',.45,'b'],['glitch',.35,'b']]},
+  drift:{blend:'mix',xfade:.55,decks:[
+    ['mirror',.75,'a'],['ribbon',.5,'a'],['smoke',.45,'b'],['aurora',.4,'b']]},
+  grid:{blend:'mix',xfade:.5,decks:[
+    ['hex',.85,'a'],['lattice',.55,'a'],['voronoi',.5,'b'],['scan',.4,'b']]},
+  strobe:{blend:'add',xfade:.5,decks:[
+    ['field',.95,'a'],['pulse',.6,'a'],['laser',.55,'b'],['glitch',.5,'b']]},
+  smoke:{blend:'screen',xfade:.48,decks:[
+    ['smoke',.8,'a'],['dust',.5,'a'],['aurora',.45,'b'],['water',.35,'b']]},
+  laser:{blend:'add',xfade:.4,decks:[
+    ['laser',.9,'a'],['tunnel',.55,'a'],['field',.5,'b'],['scan',.4,'b']]},
+  cells:{blend:'mix',xfade:.52,decks:[
+    ['voronoi',.85,'a'],['blob',.55,'a'],['hex',.45,'b'],['plasma',.4,'b']]},
+};
 function applyVizPreset(id){
   const p=VIZ_PRESETS[id]; if(!p)return;
+  const keepPrev=S.viz&&S.viz.preview!=null?!!S.viz.preview:true;
+  const keepCue=S.viz&&S.viz.cueDeck!=null?(S.viz.cueDeck|0):0;
   S.viz=normalizeViz(JSON.parse(JSON.stringify(p)));
-  const t=S.viz.tool||'tunnel';
-  const inten=S.viz.intensity!=null?S.viz.intensity:0.7;
-  S.viz.decks=[
-    {tool:t,intensity:inten},
-    {tool:'',intensity:0},
-    {tool:'',intensity:0},
-    {tool:'',intensity:0},
-  ];
-  S.viz.blend='mix'; S.viz.editDeck=0;
+  const setup=VIZ_SETUPS[id];
+  if(setup&&setup.decks){
+    S.viz.decks=setup.decks.map(([tool,inten,route])=>vizMkDeck(tool,inten,route));
+    S.viz.blend=setup.blend||'mix';
+    S.viz.xfade=setup.xfade!=null?setup.xfade:0.5;
+  }else{
+    const t=S.viz.tool||'tunnel';
+    const inten=S.viz.intensity!=null?S.viz.intensity:0.7;
+    S.viz.decks=[
+      vizMkDeck(t,inten,'a'),
+      vizMkDeck('pulse',Math.max(0.35,inten*0.55),'a'),
+      vizMkDeck('mirror',Math.max(0.3,inten*0.5),'b'),
+      vizMkDeck('field',Math.max(0.25,inten*0.4),'b'),
+    ];
+    S.viz.blend='mix'; S.viz.xfade=0.5;
+  }
+  S.viz.editDeck=0;
+  S.viz.cueDeck=Math.max(0,Math.min(3,keepCue));
+  S.viz.xfadeCurve='eq';
+  S.viz.preview=keepPrev; S.viz.blackout=false;
+  // focus tool knobs on edit deck's tool
+  const ed=S.viz.decks[0];
+  if(ed&&ed.tool) S.viz.tool=ed.tool;
   syncVizUI(); syncPush(true);
 }
 function drumFactoryBanks(){
@@ -5217,6 +5498,14 @@ void main(){
   gl_FragColor=vec4(withTrail(col),1.0);
 }`;
 
+const VIZ_FS_BLIT=`
+precision mediump float;
+varying vec2 v_uv;
+uniform sampler2D u_tex;
+void main(){
+  gl_FragColor=texture2D(u_tex,v_uv);
+}
+`;
 const VIZ_FS_COMP=VIZ_COMMON+`
 uniform sampler2D u_d0,u_d1,u_d2,u_d3;
 uniform float u_w0,u_w1,u_w2,u_w3;
@@ -5359,8 +5648,9 @@ function initViz(){
   const ribbon=linkProg(gl,VIZ_VS,VIZ_FS_RIBBON);
   const hex=linkProg(gl,VIZ_VS,VIZ_FS_HEX);
   const comp=linkProg(gl,VIZ_VS,VIZ_FS_COMP);
-  if(!tunnel||!pulse||!mirror||!flake||!plasma||!laser||!scan||!glitch||!field||!blob||!smoke||!water||!aurora||!dust||!lattice||!voronoi||!stars||!ribbon||!hex||!comp)return false;
-  VIZ.prog={tunnel,pulse,mirror,flake,plasma,laser,scan,glitch,field,blob,smoke,water,aurora,dust,lattice,voronoi,stars,ribbon,hex,comp};
+  const blit=linkProg(gl,VIZ_VS,VIZ_FS_BLIT);
+  if(!tunnel||!pulse||!mirror||!flake||!plasma||!laser||!scan||!glitch||!field||!blob||!smoke||!water||!aurora||!dust||!lattice||!voronoi||!stars||!ribbon||!hex||!comp||!blit)return false;
+  VIZ.prog={tunnel,pulse,mirror,flake,plasma,laser,scan,glitch,field,blob,smoke,water,aurora,dust,lattice,voronoi,stars,ribbon,hex,comp,blit};
   vizCacheLocs('tunnel',tunnel);
   vizCacheLocs('pulse',pulse);
   vizCacheLocs('mirror',mirror);
@@ -5381,8 +5671,22 @@ function initViz(){
   vizCacheLocs('ribbon',ribbon);
   vizCacheLocs('hex',hex);
   vizCacheLocs('comp',comp);
+  VIZ.locs.blit={
+    a_pos:gl.getAttribLocation(blit,'a_pos'),
+    u_tex:gl.getUniformLocation(blit,'u_tex'),
+  };
   VIZ.deckTex=[makeTex(gl),makeTex(gl),makeTex(gl),makeTex(gl)];
   VIZ.deckFbo=[gl.createFramebuffer(),gl.createFramebuffer(),gl.createFramebuffer(),gl.createFramebuffer()];
+  VIZ.thumbW=160; VIZ.thumbH=90;
+  VIZ.thumbTex=makeTex(gl);
+  gl.bindTexture(gl.TEXTURE_2D,VIZ.thumbTex);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,VIZ.thumbW,VIZ.thumbH,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+  VIZ.thumbFbo=gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER,VIZ.thumbFbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,VIZ.thumbTex,0);
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  VIZ.thumbBuf=new Uint8Array(VIZ.thumbW*VIZ.thumbH*4);
+  VIZ.thumbTick=0;
   VIZ.layerW=0; VIZ.layerH=0;
   VIZ.buf=gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
@@ -5496,7 +5800,8 @@ function vizDrawTool(tool, trailAmt, t, beat, punch, intensity){
   gl.bindTexture(gl.TEXTURE_2D,VIZ.prevTex);
   if(L.u_prev) gl.uniform1i(L.u_prev,1);
   const inten=intensity!=null?intensity:S.viz.intensity;
-  gl.uniform2f(L.u_res,canvas.width,canvas.height);
+  const vp=gl.getParameter(gl.VIEWPORT);
+  gl.uniform2f(L.u_res, vp[2]||canvas.width, vp[3]||canvas.height);
   gl.uniform1f(L.u_t,t);
   gl.uniform1f(L.u_bpm,S.bpm||172);
   gl.uniform1f(L.u_beat,beat);
@@ -5680,7 +5985,7 @@ function vizCompositeDecks(slots, blendMode, trailAmt, punch){
   const prog=VIZ.prog.comp;
   const L=VIZ.locs.comp;
   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-  gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+  // keep caller viewport/scissor (dual PVW|PGM)
   gl.useProgram(prog);
   gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
   if(L.a_pos>=0){
@@ -5701,7 +6006,8 @@ function vizCompositeDecks(slots, blendMode, trailAmt, punch){
   gl.bindTexture(gl.TEXTURE_2D,VIZ.fftTex);
   if(L.u_freq) gl.uniform1i(L.u_freq,5);
   const canvas=gl.canvas;
-  gl.uniform2f(L.u_res,canvas.width,canvas.height);
+  const vp=gl.getParameter(gl.VIEWPORT);
+  gl.uniform2f(L.u_res, vp[2]||canvas.width, vp[3]||canvas.height);
   gl.uniform1f(L.u_t,0); gl.uniform1f(L.u_bpm,S.bpm||172);
   gl.uniform1f(L.u_beat,0); gl.uniform1f(L.u_intensity,1);
   gl.uniform1f(L.u_hue,0); gl.uniform1f(L.u_speed,0); gl.uniform1f(L.u_playing,0);
@@ -5718,18 +6024,211 @@ function vizCompositeDecks(slots, blendMode, trailAmt, punch){
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
 }
 const VIZ_BLEND_IDX={mix:0,add:1,screen:2,diff:3,flake:4};
+function vizXfadeGains(){
+  const x=clamp01(S.viz&&S.viz.xfade,0.5);
+  if(S.viz&&S.viz.xfadeCurve==='cut'){
+    if(x<0.5) return {a:1,b:0,x};
+    if(x>0.5) return {a:0,b:1,x};
+    return {a:1,b:1,x};
+  }
+  return {a:Math.cos(x*Math.PI*0.5), b:Math.sin(x*Math.PI*0.5), x};
+}
+function vizDeckAudible(d, anySolo){
+  if(!d)return false;
+  if(d.mute)return false;
+  if(anySolo&&!d.solo)return false;
+  return true;
+}
+function vizRouteGain(route, gains){
+  if(route==='b')return gains.b;
+  if(route==='both')return 1;
+  return gains.a;
+}
+function vizDeckTool(d){
+  if(!d||!VIZ.prog)return '';
+  const tool=d.tool;
+  if(!tool||tool==='comp'||tool==='blit')return '';
+  return tool in VIZ.prog?tool:'';
+}
 function vizActiveDeckList(){
+  const decks=S.viz.decks||[];
+  const master=clamp01(S.viz.intensity,0.7);
+  const anySolo=decks.some(d=>d&&d.solo);
+  const gains=vizXfadeGains();
+  const out=[];
+  for(let i=0;i<4;i++){
+    const d=decks[i]; if(!d)continue;
+    if(!vizDeckAudible(d, anySolo))continue;
+    const tool=vizDeckTool(d);
+    const inten=clamp01(d.intensity,0);
+    if(!tool||inten<=0.02)continue;
+    const rg=vizRouteGain(d.route||'a', gains);
+    const w=inten*master*rg;
+    if(w<=0.01)continue;
+    out.push({i, tool, w, intensity:inten*master, route:d.route||'a'});
+  }
+  return out;
+}
+function vizArmedDeckList(){
   const decks=S.viz.decks||[];
   const master=clamp01(S.viz.intensity,0.7);
   const out=[];
   for(let i=0;i<4;i++){
     const d=decks[i]; if(!d)continue;
-    const tool=d.tool && d.tool in VIZ.prog && d.tool!=='comp'?d.tool:'';
-    const inten=clamp01(d.intensity,0);
-    if(!tool||inten<=0.02)continue;
-    out.push({i, tool, w:inten*master, intensity:inten*master});
+    const tool=vizDeckTool(d);
+    if(!tool)continue;
+    const inten=Math.max(0.2, clamp01(d.intensity,0))*master;
+    out.push({i, tool, intensity:inten});
   }
   return out;
+}
+function vizPreviewDeck(){
+  const decks=S.viz.decks||[];
+  let i=S.viz.cueDeck!=null?(S.viz.cueDeck|0):(S.viz.editDeck|0);
+  if(i<0||i>3)i=0;
+  const d=decks[i];
+  if(!d)return null;
+  const tool=vizDeckTool(d);
+  if(!tool)return null;
+  const master=clamp01(S.viz.intensity,0.7);
+  const inten=Math.max(0.35, clamp01(d.intensity,0))*master;
+  return {i, tool, intensity:inten};
+}
+function vizWantDual(){
+  if(!S.viz||!S.viz.preview)return false;
+  if(document.body.classList.contains('viz-solo'))return false;
+  return true;
+}
+function vizRenderArmedDecks(t, beat, punch){
+  const gl=VIZ.gl;
+  const canvas=gl.canvas;
+  const armed=vizArmedDeckList();
+  if(!armed.length)return armed;
+  gl.disable(gl.SCISSOR_TEST);
+  vizEnsureLayerSize(canvas.width, canvas.height);
+  for(const a of armed){
+    gl.bindFramebuffer(gl.FRAMEBUFFER,VIZ.deckFbo[a.i]);
+    gl.viewport(0,0,canvas.width,canvas.height);
+    vizDrawTool(a.tool, 0, t, beat, punch, a.intensity);
+  }
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  return armed;
+}
+function vizCompositeFromActive(active, trailAmt, punch){
+  const gl=VIZ.gl;
+  const prog=VIZ.prog.comp;
+  const L=VIZ.locs.comp;
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
+  if(L.a_pos>=0){
+    gl.enableVertexAttribArray(L.a_pos);
+    gl.vertexAttribPointer(L.a_pos,2,gl.FLOAT,false,0,0);
+  }
+  const texUnits=[gl.TEXTURE0,gl.TEXTURE1,gl.TEXTURE2,gl.TEXTURE3];
+  const packed=[null,null,null,null];
+  for(let n=0;n<active.length&&n<4;n++) packed[n]=active[n];
+  for(let i=0;i<4;i++){
+    gl.activeTexture(texUnits[i]);
+    const slot=packed[i];
+    gl.bindTexture(gl.TEXTURE_2D, slot?VIZ.deckTex[slot.i]:VIZ.deckTex[0]);
+    const loc=L['u_d'+i]; if(loc) gl.uniform1i(loc,i);
+    const wloc=L['u_w'+i]; if(wloc) gl.uniform1f(wloc, slot?slot.w:0);
+  }
+  gl.activeTexture(gl.TEXTURE4);
+  gl.bindTexture(gl.TEXTURE_2D,VIZ.prevTex);
+  if(L.u_prev) gl.uniform1i(L.u_prev,4);
+  gl.activeTexture(gl.TEXTURE5);
+  gl.bindTexture(gl.TEXTURE_2D,VIZ.fftTex);
+  if(L.u_freq) gl.uniform1i(L.u_freq,5);
+  const canvas=gl.canvas;
+  const vp=gl.getParameter(gl.VIEWPORT);
+  gl.uniform2f(L.u_res, vp[2]||canvas.width, vp[3]||canvas.height);
+  gl.uniform1f(L.u_t,0); gl.uniform1f(L.u_bpm,S.bpm||172);
+  gl.uniform1f(L.u_beat,0); gl.uniform1f(L.u_intensity,1);
+  gl.uniform1f(L.u_hue,0); gl.uniform1f(L.u_speed,0); gl.uniform1f(L.u_playing,0);
+  if(L.u_trail) gl.uniform1f(L.u_trail,trailAmt);
+  if(L.u_punch) gl.uniform1f(L.u_punch,punch);
+  if(L.u_n) gl.uniform1f(L.u_n, active.length);
+  if(L.u_blendMode) gl.uniform1f(L.u_blendMode, VIZ_BLEND_IDX[S.viz.blend]||0);
+  const fl=S.viz.flake||{};
+  if(L.u_split) gl.uniform1f(L.u_split, fl.split||12);
+  if(L.u_kernel) gl.uniform1f(L.u_kernel, VIZ_KERNEL_IDX[fl.kernel]||0);
+  if(L.u_jitter) gl.uniform1f(L.u_jitter, fl.jitter||0);
+  if(L.u_mix) gl.uniform1f(L.u_mix, fl.mix!=null?fl.mix:0.9);
+  if(L.u_soft) gl.uniform1f(L.u_soft, fl.soft||0);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+function vizDrawProgram(active, trail, t, beat, punch){
+  const gl=VIZ.gl;
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  if(S.viz&&S.viz.blackout){
+    gl.clearColor(0,0,0,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    return;
+  }
+  if(!active.length){
+    gl.clearColor(0.02,0.025,0.04,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    return;
+  }
+  if(active.length===1 && VIZ.layerW<=0){
+    vizDrawTool(active[0].tool, trail, t, beat, punch, active[0].intensity);
+    return;
+  }
+  if(VIZ.layerW>0){
+    vizCompositeFromActive(active, trail, punch);
+  }else{
+    vizDrawTool(active[0].tool, trail, t, beat, punch, active[0].intensity);
+  }
+}
+function vizBlitDeckThumbs(armed){
+  if(!VIZ.ready||!VIZ.prog.blit)return;
+  const gl=VIZ.gl;
+  VIZ.thumbTick=(VIZ.thumbTick|0)+1;
+  const doRead=(VIZ.thumbTick&1)===1;
+  const L=VIZ.locs.blit;
+  const prog=VIZ.prog.blit;
+  const armedSet=new Set((armed||[]).map(a=>a.i));
+  const savedVp=gl.getParameter(gl.VIEWPORT);
+  const scissorOn=gl.getParameter(gl.SCISSOR_TEST);
+  if(scissorOn) gl.disable(gl.SCISSOR_TEST);
+  for(let i=0;i<4;i++){
+    const canvas=document.getElementById('vizdeckprev'+i);
+    if(!canvas)continue;
+    const ctx=canvas.getContext('2d');
+    if(!ctx)continue;
+    if(!armedSet.has(i) || VIZ.layerW<=0){
+      ctx.fillStyle='#050608';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      continue;
+    }
+    if(!doRead)continue;
+    gl.bindFramebuffer(gl.FRAMEBUFFER,VIZ.thumbFbo);
+    gl.viewport(0,0,VIZ.thumbW,VIZ.thumbH);
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
+    if(L.a_pos>=0){
+      gl.enableVertexAttribArray(L.a_pos);
+      gl.vertexAttribPointer(L.a_pos,2,gl.FLOAT,false,0,0);
+    }
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D,VIZ.deckTex[i]);
+    if(L.u_tex) gl.uniform1i(L.u_tex,0);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    gl.readPixels(0,0,VIZ.thumbW,VIZ.thumbH,gl.RGBA,gl.UNSIGNED_BYTE,VIZ.thumbBuf);
+    const w=VIZ.thumbW,h=VIZ.thumbH;
+    const img=ctx.createImageData(w,h);
+    const src=VIZ.thumbBuf, dst=img.data;
+    for(let y=0;y<h;y++){
+      const si=(h-1-y)*w*4, di=y*w*4;
+      dst.set(src.subarray(si,si+w*4), di);
+    }
+    ctx.putImageData(img,0,0);
+  }
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  gl.viewport(savedVp[0],savedVp[1],savedVp[2],savedVp[3]);
+  if(scissorOn) gl.enable(gl.SCISSOR_TEST);
 }
 function renderViz(){
   if(!isVizVisible())return;
@@ -5744,27 +6243,47 @@ function renderViz(){
   const beat=vizBeatPhase(t);
   const punch=vizPunchLevel(t,beat)*clamp01(S.viz.flash,0.2);
   const trail=S.viz.trail;
+  const armed=vizRenderArmedDecks(t, beat, punch);
   const active=vizActiveDeckList();
+  const dual=vizWantDual();
+  document.body.classList.toggle('viz-dual', dual);
+  gl.disable(gl.SCISSOR_TEST);
   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   gl.viewport(0,0,canvas.width,canvas.height);
-  if(!active.length){
-    gl.clearColor(0.02,0.025,0.04,1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-  }else if(active.length===1){
-    vizDrawTool(active[0].tool, trail, t, beat, punch, active[0].intensity);
-  }else{
-    vizEnsureLayerSize(canvas.width, canvas.height);
-    const slots=[null,null,null,null];
-    for(let s=0;s<active.length;s++){
-      const a=active[s];
-      gl.bindFramebuffer(gl.FRAMEBUFFER,VIZ.deckFbo[s]);
-      gl.viewport(0,0,canvas.width,canvas.height);
-      vizDrawTool(a.tool, 0, t, beat, punch, a.intensity);
-      slots[s]={w:a.w};
+  if(dual){
+    const half=Math.max(1,canvas.width>>1);
+    gl.enable(gl.SCISSOR_TEST);
+    gl.scissor(half,0,canvas.width-half,canvas.height);
+    gl.viewport(half,0,canvas.width-half,canvas.height);
+    vizDrawProgram(active, trail, t, beat, punch);
+    gl.scissor(0,0,half,canvas.height);
+    gl.viewport(0,0,half,canvas.height);
+    const pv=vizPreviewDeck();
+    if(pv && VIZ.layerW>0 && VIZ.prog.blit){
+      const L=VIZ.locs.blit, prog=VIZ.prog.blit;
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER,VIZ.buf);
+      if(L.a_pos>=0){
+        gl.enableVertexAttribArray(L.a_pos);
+        gl.vertexAttribPointer(L.a_pos,2,gl.FLOAT,false,0,0);
+      }
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D,VIZ.deckTex[pv.i]);
+      if(L.u_tex) gl.uniform1i(L.u_tex,0);
+      gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    }else if(pv){
+      vizDrawTool(pv.tool, 0, t, beat, punch*0.65, pv.intensity);
+    }else{
+      gl.clearColor(0.015,0.018,0.03,1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
     }
-    vizCompositeDecks(slots, VIZ_BLEND_IDX[S.viz.blend]||0, trail, punch);
+    gl.disable(gl.SCISSOR_TEST);
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }else{
+    vizDrawProgram(active, trail, t, beat, punch);
   }
   vizCopyToPrev();
+  vizBlitDeckThumbs(armed);
 }
 function vizClearPreset(){ if(S.viz) S.viz.preset=''; }
 function syncVizUI(){
@@ -5779,23 +6298,70 @@ function syncVizUI(){
     if(focusTool) panel.classList.add('show-'+focusTool);
     if(S.viz.blend==='flake') panel.classList.add('show-flake-mix');
   }
+  const cue=S.viz.cueDeck!=null?(S.viz.cueDeck|0):ed;
+  const anySolo=(S.viz.decks||[]).some(d=>d&&d.solo);
   document.querySelectorAll('#vizdecks .viz-deck').forEach(card=>{
     const i=+card.dataset.deck|0;
+    const d=S.viz.decks[i]||{tool:'',intensity:0,mute:false,solo:false,route:'a'};
+    const route=d.route||'a';
     card.classList.toggle('focus', i===ed);
-    const d=S.viz.decks[i]||{tool:'',intensity:0};
+    card.classList.toggle('cueing', i===cue);
+    card.classList.toggle('soloed', !!d.solo);
+    card.classList.toggle('off', !d.tool);
+    card.classList.remove('route-a','route-b','route-both');
+    card.classList.add('route-'+route);
     const nameEl=document.getElementById('vizdecktool'+i);
     if(nameEl) nameEl.textContent=d.tool?(d.tool[0].toUpperCase()+d.tool.slice(1)):'Off';
     const sel=card.querySelector('.deck-sel');
     if(sel) sel.classList.toggle('lit', i===ed);
+    const muteBtn=card.querySelector('[data-deckmute]');
+    if(muteBtn) muteBtn.classList.toggle('lit', !!d.mute);
+    const soloBtn=card.querySelector('[data-decksolo]');
+    if(soloBtn) soloBtn.classList.toggle('lit', !!d.solo);
+    const cueBtn=card.querySelector('[data-deckcue]');
+    if(cueBtn) cueBtn.classList.toggle('lit', i===cue);
+    card.querySelectorAll('.deck-route [data-route]').forEach(b=>{
+      b.classList.toggle('lit', b.dataset.route===route);
+    });
     const intEl=document.getElementById('vizdeckint'+i);
     if(intEl){
       intEl.value=Math.round((d.intensity||0)*100);
       const lab=document.getElementById('vizdeckint'+i+'v');
       if(lab)lab.textContent=String(Math.round((d.intensity||0)*100));
     }
+    // dim fader when silenced by solo logic
+    card.classList.toggle('muted', !!d.mute || (anySolo && !d.solo));
   });
   const editLab=document.getElementById('vizdeckeditlab');
-  if(editLab) editLab.textContent='Deck '+(ed+1)+' · tool';
+  if(editLab) editLab.textContent='Ch '+(ed+1)+' · tool';
+  const pvwLab=document.getElementById('vizpvwlab');
+  if(pvwLab){
+    const cd=S.viz.decks[cue];
+    const tn=cd&&cd.tool?(cd.tool[0].toUpperCase()+cd.tool.slice(1)):'Off';
+    pvwLab.textContent='Ch '+(cue+1)+' · '+tn;
+  }
+  const xf=clamp01(S.viz.xfade,0.5);
+  const xfEl=document.getElementById('vizxfade');
+  if(xfEl) xfEl.value=Math.round(xf*100);
+  const xfLab=document.getElementById('vizxfadev');
+  if(xfLab){
+    const a=Math.round((1-xf)*100), b=Math.round(xf*100);
+    xfLab.textContent='A'+a+' · B'+b;
+  }
+  const prevBtn=document.getElementById('vizpreviewbtn');
+  if(prevBtn){
+    prevBtn.classList.toggle('lit', !!S.viz.preview);
+    prevBtn.textContent=S.viz.preview?'PVW · PGM':'PGM';
+  }
+  const blk=document.getElementById('vizblackout');
+  if(blk) blk.classList.toggle('lit', !!S.viz.blackout);
+  const curveBtn=document.getElementById('vizxfadecurve');
+  if(curveBtn){
+    const cut=S.viz.xfadeCurve==='cut';
+    curveBtn.classList.toggle('lit', !cut);
+    curveBtn.textContent=cut?'CUT':'EQ';
+  }
+  document.body.classList.toggle('viz-dual', !!S.viz.preview && !document.body.classList.contains('viz-solo'));
   document.querySelectorAll('#vizdecktools [data-tool]').forEach(b=>{
     const v=b.getAttribute('data-tool')||'';
     b.classList.toggle('lit', v===(focusTool||''));
@@ -5938,11 +6504,140 @@ function syncVizUI(){
     b.classList.toggle('lit',(+b.dataset.pal)===S.viz.flake.palette);
   });
 }
+function vizCloneDeck(d){
+  return {
+    tool:d&&d.tool||'',
+    intensity:d?clamp01(d.intensity,0):0,
+    mute:!!(d&&d.mute),
+    solo:!!(d&&d.solo),
+    route:(d&&(d.route==='b'||d.route==='both'))?d.route:'a',
+  };
+}
+function vizTakeCue(){
+  if(!S.viz)return;
+  const i=S.viz.cueDeck!=null?(S.viz.cueDeck|0):(S.viz.editDeck|0);
+  const d=S.viz.decks[i]; if(!d)return;
+  d.mute=false;
+  if(!d.tool)return;
+  if(d.intensity<0.05) d.intensity=0.7;
+  d.route='both';
+  for(const x of S.viz.decks){ if(x) x.solo=false; }
+  S.viz.xfade=0.5;
+  S.viz.blackout=false;
+  S.viz.editDeck=i;
+  const btn=document.getElementById('viztakebtn');
+  if(btn){
+    btn.classList.add('take-flash');
+    clearTimeout(vizTakeCue._t);
+    vizTakeCue._t=setTimeout(()=>btn.classList.remove('take-flash'),280);
+  }
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizToggleBlackout(){
+  if(!S.viz)return;
+  S.viz.blackout=!S.viz.blackout;
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizSetXfade(v){
+  if(!S.viz)return;
+  S.viz.xfade=clamp01(v,0.5);
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizNudgeXfade(delta){
+  vizSetXfade((S.viz.xfade||0.5)+delta);
+}
+function vizToggleXfadeCurve(){
+  if(!S.viz)return;
+  S.viz.xfadeCurve=S.viz.xfadeCurve==='cut'?'eq':'cut';
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizSwapEditCue(){
+  if(!S.viz)return;
+  const a=S.viz.editDeck|0, b=S.viz.cueDeck|0;
+  if(a===b)return;
+  const tmp=vizCloneDeck(S.viz.decks[a]);
+  S.viz.decks[a]=vizCloneDeck(S.viz.decks[b]);
+  S.viz.decks[b]=tmp;
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizCopyEditToCue(){
+  if(!S.viz)return;
+  const a=S.viz.editDeck|0, b=S.viz.cueDeck|0;
+  if(a===b)return;
+  const src=vizCloneDeck(S.viz.decks[a]);
+  const dst=S.viz.decks[b]||vizCloneDeck({});
+  dst.tool=src.tool;
+  dst.intensity=src.intensity;
+  dst.route=src.route;
+  S.viz.decks[b]=dst;
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizSelectChannel(i,alsoCue){
+  i=i|0; if(i<0||i>3)return;
+  S.viz.editDeck=i;
+  if(alsoCue){ S.viz.cueDeck=i; S.viz.preview=true; }
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizCueChannel(i){
+  i=i|0; if(i<0||i>3)return;
+  S.viz.cueDeck=i;
+  S.viz.preview=true;
+  vizClearPreset(); syncVizUI(); syncPush();
+}
+function vizVizKeysActive(){
+  if(!isVizVisible())return false;
+  // visuals-only / projector: bare 1-4; full view needs Shift for channel select
+  if(document.body.classList.contains('viz-solo'))return true;
+  if(SYNC&&SYNC.views&&SYNC.views.size===1&&SYNC.views.has('visuals'))return true;
+  return 'full';
+}
 function wireVizUI(){
   syncVizUI();
   document.getElementById('vizdecks')?.addEventListener('click',e=>{
+    const mute=e.target.closest('[data-deckmute]');
+    if(mute){
+      const i=+mute.dataset.deckmute|0;
+      if(!S.viz.decks[i])return;
+      S.viz.decks[i].mute=!S.viz.decks[i].mute;
+      vizClearPreset(); syncVizUI(); syncPush(); return;
+    }
+    const solo=e.target.closest('[data-decksolo]');
+    if(solo){
+      const i=+solo.dataset.decksolo|0;
+      if(!S.viz.decks[i])return;
+      S.viz.decks[i].solo=!S.viz.decks[i].solo;
+      vizClearPreset(); syncVizUI(); syncPush(); return;
+    }
+    const cue=e.target.closest('[data-deckcue]');
+    if(cue){
+      // Cue = PVW only — does not steal edit focus
+      const i=+cue.dataset.deckcue|0;
+      S.viz.cueDeck=i;
+      S.viz.preview=true;
+      vizClearPreset(); syncVizUI(); syncPush(); return;
+    }
+    const thumb=e.target.closest('.deck-prevwrap, .deck-prev');
+    if(thumb){
+      // Tap strip preview → watch in PVW without selecting for edit
+      const wrap=thumb.closest('.viz-deck');
+      const i=wrap?(+wrap.dataset.deck|0):-1;
+      if(i<0)return;
+      S.viz.cueDeck=i;
+      S.viz.preview=true;
+      vizClearPreset(); syncVizUI(); syncPush(); return;
+    }
+    const routeBtn=e.target.closest('.deck-route [data-route]');
+    if(routeBtn){
+      const wrap=routeBtn.closest('.viz-deck');
+      const i=wrap?(+wrap.dataset.deck|0):-1;
+      if(i<0||!S.viz.decks[i])return;
+      S.viz.decks[i].route=routeBtn.dataset.route||'a';
+      vizClearPreset(); syncVizUI(); syncPush(); return;
+    }
     const b=e.target.closest('[data-decksel]'); if(!b)return;
-    S.viz.editDeck=+b.dataset.decksel|0;
+    // Channel select = edit only — preview/cue stays where it is
+    const i=+b.dataset.decksel|0;
+    S.viz.editDeck=i;
     vizClearPreset(); syncVizUI(); syncPush();
   });
   document.getElementById('vizdecks')?.addEventListener('input',e=>{
@@ -5951,9 +6646,8 @@ function wireVizUI(){
     if(!S.viz.decks[i])return;
     S.viz.decks[i].intensity=+el.value/100;
     const lab=document.getElementById('vizdeckint'+i+'v'); if(lab)lab.textContent=el.value;
-    // auto-focus + bump tool if intensity raised on empty deck
-    if(S.viz.decks[i].intensity>0.02 && !S.viz.decks[i].tool){
-      S.viz.editDeck=i;
+    if(S.viz.decks[i].intensity>0.02){
+      S.viz.editDeck=i; // edit focus only — do not steal cue/PVW
     }
     vizClearPreset(); syncPush();
   });
@@ -5961,7 +6655,7 @@ function wireVizUI(){
     const b=e.target.closest('[data-tool]'); if(!b)return;
     const ed=S.viz.editDeck|0;
     const v=b.getAttribute('data-tool')||'';
-    if(!S.viz.decks[ed]) S.viz.decks[ed]={tool:'',intensity:0};
+    if(!S.viz.decks[ed]) S.viz.decks[ed]={tool:'',intensity:0,mute:false,solo:false,route:ed<2?'a':'b'};
     S.viz.decks[ed].tool=v;
     if(v && S.viz.decks[ed].intensity<0.05) S.viz.decks[ed].intensity=0.7;
     if(!v) S.viz.decks[ed].intensity=0;
@@ -5972,6 +6666,28 @@ function wireVizUI(){
     const b=e.target.closest('[data-blend]'); if(!b)return;
     S.viz.blend=b.dataset.blend; vizClearPreset(); syncVizUI(); syncPush();
   });
+  document.getElementById('vizxfade')?.addEventListener('input',e=>{
+    S.viz.xfade=+e.target.value/100;
+    const a=100-(+e.target.value), b=+e.target.value;
+    const lab=document.getElementById('vizxfadev');
+    if(lab) lab.textContent='A'+a+' · B'+b;
+    vizClearPreset(); syncPush();
+  });
+  document.getElementById('vizxfadecenter')?.addEventListener('click',()=>{
+    S.viz.xfade=0.5;
+    vizClearPreset(); syncVizUI(); syncPush();
+  });
+  document.getElementById('vizpreviewbtn')?.addEventListener('click',()=>{
+    S.viz.preview=!S.viz.preview;
+    vizClearPreset(); syncVizUI(); syncPush();
+  });
+  document.getElementById('viztakebtn')?.addEventListener('click',()=>vizTakeCue());
+  document.getElementById('vizblackout')?.addEventListener('click',()=>vizToggleBlackout());
+  document.getElementById('vizxfadecurve')?.addEventListener('click',()=>vizToggleXfadeCurve());
+  document.getElementById('vizxfadesnapA')?.addEventListener('click',()=>vizSetXfade(0));
+  document.getElementById('vizxfadesnapB')?.addEventListener('click',()=>vizSetXfade(1));
+  document.getElementById('vizswapbtn')?.addEventListener('click',()=>vizSwapEditCue());
+  document.getElementById('vizcopybtn')?.addEventListener('click',()=>vizCopyEditToCue());
   document.getElementById('vizpresets')?.addEventListener('click',e=>{
     const b=e.target.closest('[data-preset]'); if(!b)return;
     applyVizPreset(b.dataset.preset);
@@ -6173,6 +6889,33 @@ window.addEventListener('keydown',e=>{
     e.preventDefault();togglePlay();return;
   }
   if(e.repeat)return;
+  const vizMode=typeof vizVizKeysActive==='function'?vizVizKeysActive():false;
+  if(vizMode){
+    const dig={Digit1:0,Digit2:1,Digit3:2,Digit4:3}[e.code];
+    if(dig!==undefined){
+      if(vizMode===true){
+        e.preventDefault();
+        if(e.shiftKey) vizCueChannel(dig);
+        else vizSelectChannel(dig,false);
+        return;
+      }
+      if(e.shiftKey){
+        e.preventDefault(); vizSelectChannel(dig,false); return;
+      }
+    }
+    if(vizMode===true || document.activeElement.closest?.('#vizpanel')){
+      if(e.code==='KeyM'){e.preventDefault(); const i=S.viz.editDeck|0; if(S.viz.decks[i]){S.viz.decks[i].mute=!S.viz.decks[i].mute; vizClearPreset(); syncVizUI(); syncPush();} return;}
+      if(e.code==='KeyS'&&!e.metaKey&&!e.ctrlKey){e.preventDefault(); const i=S.viz.editDeck|0; if(S.viz.decks[i]){S.viz.decks[i].solo=!S.viz.decks[i].solo; vizClearPreset(); syncVizUI(); syncPush();} return;}
+      if(e.code==='KeyC'&&!e.metaKey&&!e.ctrlKey){e.preventDefault(); vizCueChannel(S.viz.editDeck|0); return;}
+      if(e.code==='KeyA'||e.code==='ArrowLeft'){e.preventDefault(); vizNudgeXfade(-0.05); return;}
+      if(e.code==='KeyD'||e.code==='ArrowRight'){e.preventDefault(); vizNudgeXfade(0.05); return;}
+      if(e.code==='KeyZ'){e.preventDefault(); vizSetXfade(0); return;}
+      if(e.code==='KeyX'){e.preventDefault(); vizSetXfade(1); return;}
+      if(e.code==='Enter'){e.preventDefault(); vizTakeCue(); return;}
+      if(e.code==='KeyB'){e.preventDefault(); vizToggleBlackout(); return;}
+      if(e.code==='KeyP'){e.preventDefault(); S.viz.preview=!S.viz.preview; vizClearPreset(); syncVizUI(); syncPush(); return;}
+    }
+  }
   const sl=KEY_TO_SLICE[e.code];
   if(sl!==undefined){e.preventDefault();triggerSlice(sl);}
 });
